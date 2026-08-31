@@ -7,6 +7,7 @@ import { ThemeToggle } from "./theme-toggle"
 import Link from "next/link"
 import Image from "next/image"
 import { usePathname, useRouter } from "next/navigation"
+import { motion, AnimatePresence } from "framer-motion"
 
 export function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false)
@@ -39,30 +40,35 @@ export function Navigation() {
   }, [isMobileMenuOpen])
 
   useEffect(() => {
-    if (isMobileMenuOpen && mobileMenuRef.current) {
-      const focusableElements = mobileMenuRef.current.querySelectorAll(
-        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-      )
-      const firstElement = focusableElements[0] as HTMLElement
-      const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement
+    if (!isMobileMenuOpen) return
 
-      firstElement?.focus()
+    const previous = document.body.style.overflow
+    document.body.style.overflow = "hidden"
 
-      const handleKeyDown = (event: KeyboardEvent) => {
-        if (event.key === "Tab") {
-          if (event.shiftKey && document.activeElement === firstElement) {
-            event.preventDefault()
-            lastElement.focus()
-          } else if (!event.shiftKey && document.activeElement === lastElement) {
-            event.preventDefault()
-            firstElement.focus()
-          }
-        } else if (event.key === "Escape") {
-          setIsMobileMenuOpen(false)
+    const focusableElements = mobileMenuRef.current?.querySelectorAll(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+    )
+    const firstElement = focusableElements?.[0] as HTMLElement | undefined
+    const lastElement = focusableElements?.[focusableElements.length - 1] as HTMLElement | undefined
+    firstElement?.focus()
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Tab" && firstElement && lastElement) {
+        if (event.shiftKey && document.activeElement === firstElement) {
+          event.preventDefault()
+          lastElement.focus()
+        } else if (!event.shiftKey && document.activeElement === lastElement) {
+          event.preventDefault()
+          firstElement.focus()
         }
+      } else if (event.key === "Escape") {
+        setIsMobileMenuOpen(false)
       }
-      document.addEventListener("keydown", handleKeyDown)
-      return () => document.removeEventListener("keydown", handleKeyDown)
+    }
+    document.addEventListener("keydown", handleKeyDown)
+    return () => {
+      document.body.style.overflow = previous
+      document.removeEventListener("keydown", handleKeyDown)
     }
   }, [isMobileMenuOpen])
 
@@ -90,8 +96,8 @@ export function Navigation() {
   return (
     <>
       <nav
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          isScrolled ? "bg-background/95 backdrop-blur-md border-b border-border" : "bg-transparent"
+        className={`fixed top-0 left-0 right-0 z-50 pt-[env(safe-area-inset-top)] transition-all duration-500 ${
+          isScrolled || isMobileMenuOpen ? "glass-nav" : "bg-transparent"
         }`}
         role="navigation"
         aria-label="Main navigation"
@@ -141,7 +147,7 @@ export function Navigation() {
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
                 aria-expanded={isMobileMenuOpen}
-                className="w-10 h-10"
+                className="w-11 h-11"
               >
                 {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
               </Button>
@@ -150,52 +156,69 @@ export function Navigation() {
         </div>
       </nav>
 
-      {isMobileMenuOpen && (
-        <div
-          ref={overlayRef}
-          className="fixed inset-0 z-40 md:hidden bg-black/50 backdrop-blur-sm"
-          aria-hidden="true"
-          onClick={(e) => e.target === overlayRef.current && setIsMobileMenuOpen(false)}
-        >
-          <div
-            ref={mobileMenuRef}
-            className="absolute top-0 left-0 right-0 h-full bg-background border-r border-border flex flex-col overflow-y-auto"
-            role="menu"
-            aria-label="Mobile navigation menu"
-            aria-modal="true"
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div
+            ref={overlayRef}
+            className="fixed inset-0 z-40 md:hidden bg-black/40 backdrop-blur-sm"
+            aria-hidden="true"
+            onClick={(e) => e.target === overlayRef.current && setIsMobileMenuOpen(false)}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25 }}
           >
-            <div className="flex items-center justify-end p-4 pt-16 border-b border-border">
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="w-10 h-10 rounded-full"
-                aria-label="Close menu"
-              >
-                <X className="h-5 w-5" />
-              </Button>
-            </div>
-
-            <div className="flex-1 flex flex-col items-center justify-center gap-2 px-4 py-8 text-center">
-              {navItems.map((item) => (
-                <Link
-                  key={item.label}
-                  href={item.href}
-                  onClick={() => handleNavClick(item.href)}
-                  className="block w-full max-w-xs font-heading text-lg font-semibold text-muted-foreground hover:text-foreground transition-colors py-3"
+            <motion.div
+              ref={mobileMenuRef}
+              className="absolute top-0 left-0 right-0 max-h-[100dvh] overflow-y-auto glass-neu rounded-none pt-[env(safe-area-inset-top)]"
+              role="menu"
+              aria-label="Mobile navigation menu"
+              aria-modal="true"
+              initial={{ y: "-12%", opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: "-8%", opacity: 0 }}
+              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <div className="flex items-center justify-end px-4 h-16">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="w-11 h-11 rounded-full"
+                  aria-label="Close menu"
                 >
-                  {item.label}
-                </Link>
-              ))}
-              <Button asChild size="lg" className="mt-4 w-full max-w-xs">
-                <Link href={resolveHref("#contact")} onClick={() => handleNavClick("#contact")}>
-                  Book a free call
-                </Link>
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
+                  <X className="h-5 w-5" />
+                </Button>
+              </div>
+
+              <div className="flex flex-col gap-1 px-4 pb-[max(1.5rem,env(safe-area-inset-bottom))]">
+                {navItems.map((item, i) => (
+                  <motion.div
+                    key={item.label}
+                    className="w-full"
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.06 * i, duration: 0.25 }}
+                  >
+                    <Link
+                      href={item.href}
+                      onClick={() => handleNavClick(item.href)}
+                      className="block w-full font-heading text-xl font-semibold text-foreground py-3.5 border-b border-foreground/10"
+                    >
+                      {item.label}
+                    </Link>
+                  </motion.div>
+                ))}
+                <Button asChild size="lg" className="mt-5 w-full min-h-12">
+                  <Link href={resolveHref("#contact")} onClick={() => handleNavClick("#contact")}>
+                    Book a free call
+                  </Link>
+                </Button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   )
 }

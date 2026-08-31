@@ -38,8 +38,8 @@ export function Testimonials() {
   const totalSlides = Math.ceil(testimonials.length / 2)
 
   return (
-    <section id="testimonials" className="py-20 px-4 sm:px-6 lg:px-8">
-      <div className="container mx-auto max-w-6xl space-y-10">
+    <section id="testimonials" className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8">
+      <div className="container mx-auto max-w-6xl space-y-8 sm:space-y-10">
         <SectionHeading
           eyebrow="Clients"
           title="What working together looks like"
@@ -47,7 +47,24 @@ export function Testimonials() {
           align="center"
         />
 
-        <div className="relative">
+        <div className="grid gap-4 md:hidden">
+          {testimonials.map((testimonial) => (
+            <Card key={testimonial.id} className="p-5 relative">
+              <Quote className="h-7 w-7 text-primary/30 absolute top-4 right-4" />
+              <blockquote className="text-foreground leading-relaxed mb-5 pr-8">
+                “{testimonial.quote}”
+              </blockquote>
+              <div>
+                <div className="font-heading font-semibold text-foreground">{testimonial.name}</div>
+                <div className="text-sm text-muted-foreground">
+                  {testimonial.position}, {testimonial.company}
+                </div>
+              </div>
+            </Card>
+          ))}
+        </div>
+
+        <div className="relative hidden md:block">
           <div className="overflow-hidden">
             <div
               className="flex transition-transform duration-500 ease-in-out"
@@ -59,7 +76,7 @@ export function Testimonials() {
                   <div key={slideIndex} className="w-full flex-shrink-0 px-1">
                     <div className="grid md:grid-cols-2 gap-4">
                       {testimonials.slice(slideIndex * 2, slideIndex * 2 + 2).map((testimonial) => (
-                        <Card key={testimonial.id} className="p-6 border-foreground/10 bg-background relative">
+                        <Card key={testimonial.id} className="p-6 relative">
                           <Quote className="h-8 w-8 text-primary/30 absolute top-5 right-5" />
                           <blockquote className="text-foreground leading-relaxed mb-6 pr-8">
                             “{testimonial.quote}”

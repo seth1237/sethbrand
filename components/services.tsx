@@ -31,7 +31,7 @@ export function Services() {
   ]
 
   return (
-    <section id="services" className="py-20 px-4 sm:px-6 lg:px-8" aria-label="Services">
+    <section id="services" className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8" aria-label="Services">
       <div className="container mx-auto max-w-6xl space-y-12">
         <SectionHeading
           eyebrow="Services"
@@ -49,7 +49,7 @@ export function Services() {
               transition={{ duration: 0.45, delay: i * 0.08 }}
               viewport={{ once: true }}
             >
-              <Card className="p-7 h-full border-foreground/10 bg-background hover:border-primary/40 transition-colors">
+              <Card className="p-5 sm:p-7 h-full">
                 <h3 className="font-heading text-xl font-semibold text-foreground mb-2">{service.title}</h3>
                 <p className="text-muted-foreground mb-5 leading-relaxed">{service.description}</p>
                 <ul className="space-y-2.5">

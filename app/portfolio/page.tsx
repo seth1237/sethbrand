@@ -1,139 +1,47 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { Navigation } from "@/components/navigation"
 import { SectionHeading } from "@/components/section-heading"
 import { motion } from "framer-motion"
 import { X, ZoomIn } from "lucide-react"
-
-const basePortfolioItems = [
-  {
-    id: 1,
-    src: "/pro_samples/heroesforher_campaign.webp",
-    title: "Heroes For Her Campaign",
-    category: "Social Campaign",
-    description: "Empowerment campaign for women's rights and equality",
-  },
-  {
-    id: 2,
-    src: "/pro_samples/wedding_card.webp",
-    title: "Wedding Invitation Card",
-    category: "Event Design",
-    description: "Elegant wedding invitation with modern typography",
-  },
-  {
-    id: 3,
-    src: "/pro_samples/wedding_poster.webp",
-    title: "Wedding Poster",
-    category: "Event Design",
-    description: "Wedding announcement poster",
-  },
-  {
-    id: 4,
-    src: "/pro_samples/agosti.webp",
-    title: "Agosti Design",
-    category: "Brand Identity",
-    description: "Brand identity and visual design",
-  },
-  {
-    id: 5,
-    src: "/pro_samples/thankyou.webp",
-    title: "Thank You Card",
-    category: "Greeting Card",
-    description: "Appreciation card",
-  },
-  {
-    id: 6,
-    src: "/pro_samples/mm.webp",
-    title: "MM Design",
-    category: "Graphics",
-    description: "Graphic design showcase",
-  },
-  {
-    id: 7,
-    src: "/pro_samples/36.webp",
-    title: "Design Sample 36",
-    category: "Creative Work",
-    description: "Professional design work",
-  },
-  {
-    id: 8,
-    src: "/pro_samples/38.webp",
-    title: "Design Sample 38",
-    category: "Creative Work",
-    description: "Design solution",
-  },
-  {
-    id: 9,
-    src: "/pro_samples/39.webp",
-    title: "Design Sample 39",
-    category: "Creative Work",
-    description: "Modern design",
-  },
-]
-
-const squarePosterFiles = [
-  "Chemiluminescence",
-  "Choirtraining",
-  "ChurchService",
-  "Marketing",
-  "Sermon",
-  "Speakerposter",
-  "baby warmer baby incubator offer",
-  "blood sugarmachinemarketing",
-  "choirtrainingposter",
-  "easterposter",
-  "electrolyte analyzer",
-  "fetal dopler",
-  "hospital furniture",
-  "infusion pump",
-  "kidney day",
-  "labequipment",
-  "locations",
-  "marketingemergencyresponsepackage",
-  "marketingsteamsterilizer",
-  "newmonthposter",
-  "ultrasound machine",
-  "ultrasound_marketing",
-  "vespersposter",
-]
-
-const toTitle = (name: string) =>
-  name
-    .replace(/_/g, " ")
-    .replace(/\s+/g, " ")
-    .trim()
-    .replace(/\b\w/g, (char) => char.toUpperCase())
-
-const posterItems = squarePosterFiles.map((fileName, index) => ({
-  id: basePortfolioItems.length + index + 1,
-  src: `/moreposterssquareall/${fileName}.webp`,
-  title: toTitle(fileName),
-  category: "Poster",
-  description: "Square poster design",
-}))
-
-const portfolioItems = [...basePortfolioItems, ...posterItems]
-const categories = ["All", ...new Set(portfolioItems.map((item) => item.category))]
+import { DEFAULT_POSTERS, type PosterItem } from "@/lib/content-defaults"
 
 export default function PortfolioPage() {
+  const [items, setItems] = useState<PosterItem[]>(DEFAULT_POSTERS)
   const [selectedCategory, setSelectedCategory] = useState("All")
-  const [lightboxImage, setLightboxImage] = useState<(typeof portfolioItems)[0] | null>(null)
+  const [lightboxImage, setLightboxImage] = useState<PosterItem | null>(null)
+
+  useEffect(() => {
+    fetch("/api/content/posters")
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data.posters) && data.posters.length > 0) {
+          setItems(data.posters)
+        }
+      })
+      .catch(() => {})
+  }, [])
+
+  const categories = useMemo(
+    () => ["All", ...new Set(items.map((item) => item.group))],
+    [items],
+  )
 
   const filteredItems =
     selectedCategory === "All"
-      ? portfolioItems
-      : portfolioItems.filter((item) => item.category === selectedCategory)
+      ? items
+      : items.filter((item) => item.group === selectedCategory)
 
   return (
     <main className="min-h-screen bg-background">
       <Navigation />
 
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-20">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 pt-[calc(5.5rem+env(safe-area-inset-top))] pb-16 sm:pt-28 sm:pb-20">
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-12"
+          className="mb-8 sm:mb-12"
         >
           <SectionHeading
             eyebrow="Portfolio"
@@ -143,41 +51,48 @@ export default function PortfolioPage() {
           />
         </motion.div>
 
-        <div className="flex flex-wrap justify-center gap-2 mb-12">
-          {categories.map((category) => (
-            <button
-              key={category}
-              onClick={() => setSelectedCategory(category)}
-              className={`px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
-                selectedCategory === category
-                  ? "bg-primary text-primary-foreground"
-                  : "border border-foreground/10 text-muted-foreground hover:text-foreground hover:border-foreground/20"
-              }`}
-            >
-              {category}
-            </button>
-          ))}
+        <div className="relative -mx-4 sm:mx-0 mb-8 sm:mb-12">
+          <div className="overflow-x-auto overscroll-x-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            <div className="flex sm:flex-wrap sm:justify-center gap-2 px-4 sm:px-0 min-w-max sm:min-w-0 pb-1">
+              {categories.map((category) => (
+                <button
+                  key={category}
+                  onClick={() => setSelectedCategory(category)}
+                  className={`px-3.5 py-2 rounded-full text-sm font-medium whitespace-nowrap min-h-10 transition-all duration-300 ${
+                    selectedCategory === category
+                      ? "bg-primary text-primary-foreground shadow-[4px_6px_12px_oklch(0.62_0.02_250_/_0.2)]"
+                      : "glass-neu text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  {category}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="pointer-events-none absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-background sm:hidden" />
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-5">
           {filteredItems.map((item, index) => (
             <motion.div
               key={item.id}
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.35, delay: Math.min(index * 0.03, 0.3) }}
-              className="group relative aspect-[3/4] rounded-xl overflow-hidden bg-card border border-foreground/10 hover:border-primary/40 transition-colors cursor-pointer"
+              className="group glass-neu glass-neu-hover rounded-2xl p-1 sm:p-1.5 cursor-pointer"
               onClick={() => setLightboxImage(item)}
             >
-              <img src={item.src} alt={item.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
-              <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-5">
-                <span className="font-label text-[10px] tracking-widest uppercase text-primary mb-1">
-                  {item.category}
-                </span>
-                <h3 className="font-heading text-lg font-semibold text-white">{item.title}</h3>
-                <p className="text-sm text-white/70">{item.description}</p>
-                <div className="absolute top-4 right-4 w-9 h-9 bg-white/15 rounded-full flex items-center justify-center">
-                  <ZoomIn className="w-4 h-4 text-white" />
+              <div className="relative aspect-[3/4] rounded-xl overflow-hidden">
+                <img src={item.src} alt={item.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                <div className="media-overlay absolute inset-0 bg-black/60 transition-opacity duration-300 flex flex-col justify-end p-2.5 sm:p-5">
+                  <span className="font-label text-[9px] sm:text-[10px] tracking-widest uppercase text-primary mb-0.5">
+                    {item.group}
+                  </span>
+                  <h3 className="font-heading text-xs sm:text-lg font-semibold text-white line-clamp-2">{item.title}</h3>
+                  <p className="hidden sm:block text-sm text-white/70">{item.description}</p>
+                  <div className="hidden sm:flex absolute top-4 right-4 w-9 h-9 bg-white/15 rounded-full items-center justify-center">
+                    <ZoomIn className="w-4 h-4 text-white" />
+                  </div>
                 </div>
               </div>
             </motion.div>
@@ -191,11 +106,11 @@ export default function PortfolioPage() {
 
       {lightboxImage && (
         <div
-          className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center p-4"
+          className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center p-4 pt-[max(1rem,env(safe-area-inset-top))] pb-[max(1rem,env(safe-area-inset-bottom))]"
           onClick={() => setLightboxImage(null)}
         >
           <button
-            className="absolute top-4 right-4 w-11 h-11 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center"
+            className="absolute top-[max(0.75rem,env(safe-area-inset-top))] right-3 w-11 h-11 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center"
             onClick={() => setLightboxImage(null)}
             aria-label="Close"
           >
@@ -206,14 +121,14 @@ export default function PortfolioPage() {
             <img
               src={lightboxImage.src}
               alt={lightboxImage.title}
-              className="w-full h-auto max-h-[80vh] object-contain rounded-lg mx-auto"
+              className="w-full h-auto max-h-[70vh] sm:max-h-[80vh] object-contain rounded-lg mx-auto"
             />
-            <div className="mt-5 text-center">
+            <div className="mt-4 sm:mt-5 text-center px-2">
               <span className="font-label text-xs tracking-widest uppercase text-primary">
-                {lightboxImage.category}
+                {lightboxImage.group}
               </span>
-              <h2 className="font-heading text-2xl font-semibold text-white mt-1">{lightboxImage.title}</h2>
-              <p className="text-white/70">{lightboxImage.description}</p>
+              <h2 className="font-heading text-lg sm:text-2xl font-semibold text-white mt-1">{lightboxImage.title}</h2>
+              <p className="text-sm sm:text-base text-white/70">{lightboxImage.description}</p>
             </div>
           </div>
         </div>

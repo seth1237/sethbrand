@@ -30,7 +30,7 @@ export function About() {
   ]
 
   return (
-    <section id="about" className="py-20 px-4 sm:px-6 lg:px-8" aria-label="About Seth Makori">
+    <section id="about" className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8 scroll-mt-20" aria-label="About Seth Makori">
       <div className="container mx-auto max-w-6xl space-y-12">
         <SectionHeading
           eyebrow="About"
@@ -72,7 +72,7 @@ export function About() {
                 transition={{ duration: 0.4, delay: i * 0.08 }}
                 viewport={{ once: true }}
               >
-                <Card className="p-5 h-full border-foreground/10 bg-background hover:border-primary/40 transition-colors">
+                <Card className="p-5 h-full">
                   <skill.icon className="h-5 w-5 text-primary mb-3" />
                   <h3 className="font-heading font-semibold text-foreground mb-1.5">{skill.title}</h3>
                   <p className="text-sm text-muted-foreground leading-relaxed">{skill.description}</p>

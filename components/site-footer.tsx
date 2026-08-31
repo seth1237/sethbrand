@@ -20,15 +20,15 @@ const socials = [
 
 export function SiteFooter() {
   return (
-    <footer className="border-t border-border bg-background">
-      <div className="container mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-10 flex flex-col sm:flex-row items-center justify-between gap-6">
+    <footer className="glass-nav mt-4 pb-[env(safe-area-inset-bottom)]">
+      <div className="container mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-8 sm:py-10 flex flex-col sm:flex-row items-center justify-between gap-5">
         <div className="text-center sm:text-left space-y-1">
           <p className="font-heading font-semibold text-foreground">Seth Makori</p>
           <p className="text-sm text-muted-foreground">
             Websites, SEO, and marketing for Kenyan businesses.
           </p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center justify-center gap-2">
           {socials.map(({ icon: Icon, href, label }) => (
             <a
               key={label}
@@ -36,7 +36,7 @@ export function SiteFooter() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label={label}
-              className="p-2 rounded-full text-muted-foreground hover:text-primary transition-colors"
+              className="inline-flex h-11 w-11 items-center justify-center rounded-full glass-neu text-muted-foreground hover:text-primary transition-colors"
             >
               <Icon className="h-4 w-4" />
             </a>

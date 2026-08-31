@@ -73,15 +73,15 @@ export default function PricingPage() {
   return (
     <>
       <Navigation />
-      <main className="min-h-screen pt-20">
-        <section className="py-16 px-4 sm:px-6 lg:px-8">
-          <div className="container mx-auto max-w-6xl space-y-12">
+      <main className="min-h-screen pt-[calc(4.5rem+env(safe-area-inset-top))]">
+        <section className="py-10 sm:py-16 px-4 sm:px-6 lg:px-8">
+          <div className="container mx-auto max-w-6xl space-y-10 sm:space-y-12">
             <div className="text-center space-y-3">
-              <p className="font-label text-xs sm:text-sm tracking-[0.2em] uppercase text-primary">Pricing</p>
-              <h1 className="font-heading text-4xl sm:text-5xl font-semibold tracking-tight">
+              <p className="font-label text-[11px] sm:text-sm tracking-[0.12em] sm:tracking-[0.2em] uppercase text-primary">Pricing</p>
+              <h1 className="font-heading text-[1.75rem] sm:text-5xl font-semibold tracking-tight">
                 Clear monthly retainers
               </h1>
-              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto">
                 Pick a plan, or book a call and we&apos;ll size the work to what you actually need.
               </p>
             </div>
@@ -134,7 +134,7 @@ export default function PricingPage() {
                     <p className="text-muted-foreground text-sm">{plan.description}</p>
                     <div className="pt-2">
                       <div className="flex items-baseline">
-                        <span className="font-heading text-4xl font-semibold">
+                        <span className="font-heading text-3xl sm:text-4xl font-semibold break-words">
                           KSh {plan.price[billingCycle].toLocaleString()}
                         </span>
                         <span className="ml-1 text-muted-foreground text-sm">/month</span>
@@ -165,7 +165,7 @@ export default function PricingPage() {
               ))}
             </div>
 
-            <div className="rounded-xl border border-foreground/10 p-8 text-center">
+            <div className="rounded-xl border border-foreground/10 p-5 sm:p-8 text-center">
               <h2 className="font-heading text-2xl font-semibold mb-3">Need something custom?</h2>
               <p className="text-muted-foreground max-w-2xl mx-auto mb-6">
                 One-off websites, M-Pesa integrations, and internal systems are quoted separately.

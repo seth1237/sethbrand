@@ -150,7 +150,7 @@ export function ContactForm() {
             <FormItem>
               <FormLabel>Message</FormLabel>
               <FormControl>
-                <Textarea placeholder="Type your message..." className="min-h-[150px]" {...field} />
+                <Textarea placeholder="Type your message..." className="min-h-[120px] sm:min-h-[150px]" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

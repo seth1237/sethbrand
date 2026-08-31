@@ -194,21 +194,21 @@ export default function ServicesPage() {
   return (
     <>
       <Navigation />
-      <main className="min-h-screen pt-20">
-        <section className="py-16 px-4 sm:px-6 lg:px-8">
+      <main className="min-h-screen pt-[calc(4.5rem+env(safe-area-inset-top))]">
+        <section className="py-10 sm:py-16 px-4 sm:px-6 lg:px-8">
         <div className="container mx-auto max-w-6xl">
           <div className="space-y-12">
             <div className="text-center space-y-3 max-w-3xl mx-auto">
-              <p className="font-label text-xs sm:text-sm tracking-[0.2em] uppercase text-primary">Services</p>
-              <h1 className="font-heading text-4xl sm:text-5xl font-semibold text-foreground tracking-tight">
+              <p className="font-label text-[11px] sm:text-sm tracking-[0.12em] sm:tracking-[0.2em] uppercase text-primary">Services</p>
+              <h1 className="font-heading text-[1.75rem] sm:text-5xl font-semibold text-foreground tracking-tight">
                 What I can do for your business
               </h1>
-              <p className="text-lg text-muted-foreground">
+              <p className="text-base sm:text-lg text-muted-foreground">
                 Websites, SEO, marketing, and design — built for Kenyan businesses that need customers, not just a pretty page.
               </p>
             </div>
             
-            <div className="space-y-24 pt-8">
+            <div className="space-y-14 sm:space-y-24 pt-4 sm:pt-8">
               {serviceCategories.map((category) => (
                 <div key={category.id} id={category.id} className="scroll-mt-24">
                   <div className="grid md:grid-cols-12 gap-8 items-start">
@@ -219,7 +219,7 @@ export default function ServicesPage() {
                       <h2 className="font-heading text-2xl sm:text-3xl font-semibold text-foreground">{category.title}</h2>
                       <p className="text-muted-foreground">{category.description}</p>
                       <div className="pt-4">
-                        <Button asChild variant="outline">
+                        <Button asChild variant="outline" className="w-full sm:w-auto min-h-11">
                           <Link href="/contact">
                             Book a free call
                             <ArrowRight className="ml-2 h-4 w-4" />

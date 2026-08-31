@@ -16,6 +16,11 @@ const nextConfig = {
       },
     ],
   },
+  experimental: {
+    serverActions: {
+      bodySizeLimit: '8mb',
+    },
+  },
   // Optimize production builds
   productionBrowserSourceMaps: false,
   poweredByHeader: false,

@@ -47,7 +47,7 @@ export function Experience() {
   ]
 
   return (
-    <section id="experience" className="py-20 px-4 sm:px-6 lg:px-8">
+    <section id="experience" className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8">
       <div className="container mx-auto max-w-6xl space-y-12">
         <SectionHeading
           eyebrow="Background"
@@ -55,7 +55,7 @@ export function Experience() {
           description="Engineering roots, agency-style delivery, currently going deeper on AI."
         />
 
-        <div className="grid md:grid-cols-3 gap-10">
+        <div className="grid md:grid-cols-3 gap-8 md:gap-10">
           <div>
             <div className="flex items-center gap-2 mb-5">
               <Briefcase className="h-4 w-4 text-primary" />

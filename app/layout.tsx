@@ -1,5 +1,5 @@
 import type React from "react"
-import type { Metadata } from "next"
+import type { Metadata, Viewport } from "next"
 import { GeistSans } from "geist/font/sans"
 import { GeistMono } from "geist/font/mono"
 import { Space_Grotesk, IBM_Plex_Mono } from "next/font/google"
@@ -7,7 +7,9 @@ import { Analytics } from "@vercel/analytics/next"
 import { Suspense } from "react"
 import { ThemeProvider } from "@/components/theme-provider"
 import { AnalyticsTracker } from "@/components/analytics-tracker"
-import { SiteFooter } from "@/components/site-footer"
+import { ConditionalFooter } from "@/components/conditional-footer"
+import { PageGlow } from "@/components/page-glow"
+import { PageTransition } from "@/components/page-transition"
 import { siteConfig } from "@/lib/site-config"
 import "./globals.css"
 
@@ -54,6 +56,14 @@ export const metadata: Metadata = {
       { url: "/apple-icon.png" },
     ],
   },
+}
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  viewportFit: "cover",
+  themeColor: "#F7F8FA",
 }
 
 const display = Space_Grotesk({
@@ -127,8 +137,6 @@ export default function RootLayout({
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
         <meta name="theme-color" content="#F7F8FA" />
         <meta name="description" content="Websites that get found, and businesses that get customers. Web development, SEO, design, and marketing in Nairobi, Kenya." />
-        {/* Optimize rendering */}
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }}
@@ -139,9 +147,12 @@ export default function RootLayout({
         />
       </head>
       <body className={`font-sans ${GeistSans.variable} ${GeistMono.variable} ${display.variable} ${monoLabel.variable} antialiased`}>
+        <PageGlow />
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
-          <Suspense fallback={null}>{children}</Suspense>
-          <SiteFooter />
+          <Suspense fallback={null}>
+            <PageTransition>{children}</PageTransition>
+          </Suspense>
+          <ConditionalFooter />
           <Suspense fallback={null}>
             <AnalyticsTracker />
           </Suspense>

@@ -12,7 +12,7 @@ export default function ContactPage() {
   return (
     <main className="min-h-screen">
       <Navigation />
-      <div className="pt-8">
+      <div className="pt-[calc(3.5rem+env(safe-area-inset-top))]">
         <Contact />
       </div>
     </main>
