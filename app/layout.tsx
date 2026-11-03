@@ -8,7 +8,6 @@ import { Suspense } from "react"
 import { ThemeProvider } from "@/components/theme-provider"
 import { AnalyticsTracker } from "@/components/analytics-tracker"
 import { ConditionalFooter } from "@/components/conditional-footer"
-import { PageGlow } from "@/components/page-glow"
 import { PageTransition } from "@/components/page-transition"
 import { siteConfig } from "@/lib/site-config"
 import "./globals.css"
@@ -63,7 +62,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 5,
   viewportFit: "cover",
-  themeColor: "#F7F8FA",
+  themeColor: "#f6f5f2",
 }
 
 const display = Space_Grotesk({
@@ -135,7 +134,7 @@ export default function RootLayout({
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-        <meta name="theme-color" content="#F7F8FA" />
+        <meta name="theme-color" content="#f6f5f2" />
         <meta name="description" content="Websites that get found, and businesses that get customers. Web development, SEO, design, and marketing in Nairobi, Kenya." />
         <script
           type="application/ld+json"
@@ -147,7 +146,6 @@ export default function RootLayout({
         />
       </head>
       <body className={`font-sans ${GeistSans.variable} ${GeistMono.variable} ${display.variable} ${monoLabel.variable} antialiased`}>
-        <PageGlow />
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
           <Suspense fallback={null}>
             <PageTransition>{children}</PageTransition>

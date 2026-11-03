@@ -1,35 +1,28 @@
 import dynamic from "next/dynamic"
 import { Hero } from "@/components/hero"
-import { About } from "@/components/about"
-import { Services } from "@/components/services"
 import { Navigation } from "@/components/navigation"
+import { Projects } from "@/components/projects"
+import { Services } from "@/components/services"
+import { About } from "@/components/about"
 
-// Dynamically import below-the-fold components to reduce initial JS bundle
-const GraphicsShowcase = dynamic(() => import("@/components/graphics-showcase").then(mod => ({ default: mod.GraphicsShowcase })), {
-  loading: () => <div className="h-40 sm:h-64" />
-})
-const Projects = dynamic(() => import("@/components/projects").then(mod => ({ default: mod.Projects })), {
-  loading: () => <div className="h-40 sm:h-64" />
-})
-const Experience = dynamic(() => import("@/components/experience").then(mod => ({ default: mod.Experience })), {
-  loading: () => <div className="h-40 sm:h-64" />
-})
-const Contact = dynamic(() => import("@/components/contact").then(mod => ({ default: mod.Contact })), {
-  loading: () => <div className="h-40 sm:h-64" />
-})
-const Testimonials = dynamic(() => import("@/components/testimonials").then(mod => ({ default: mod.Testimonials })), {
-  loading: () => <div className="h-40 sm:h-64" />
-})
+const GraphicsShowcase = dynamic(() =>
+  import("@/components/graphics-showcase").then((mod) => ({ default: mod.GraphicsShowcase })),
+)
+const Experience = dynamic(() => import("@/components/experience").then((mod) => ({ default: mod.Experience })))
+const Contact = dynamic(() => import("@/components/contact").then((mod) => ({ default: mod.Contact })))
+const Testimonials = dynamic(() =>
+  import("@/components/testimonials").then((mod) => ({ default: mod.Testimonials })),
+)
 
 export default function Home() {
   return (
-    <main className="min-h-screen">
+    <main>
       <Navigation />
       <Hero />
-      <About />
+      <Projects />
       <Services />
       <GraphicsShowcase />
-      <Projects />
+      <About />
       <Testimonials />
       <Experience />
       <Contact />

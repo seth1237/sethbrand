@@ -162,7 +162,7 @@ export const DEFAULT_SITES: SiteItem[] = [
     id: "site-3",
     title: "Haven Furnitures",
     description: "Furniture e-commerce with an admin dashboard for products and images.",
-    image: "/modern-furniture-website.webp",
+    image: "/modern-furniture-website-dashboard.webp",
     tags: ["E-commerce", "Dashboard"],
     link: "https://www.havenlivingfurniture.co.ke/",
     source: "default",

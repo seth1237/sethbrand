@@ -1,55 +1,47 @@
-"use client"
-
-import { Mail, Phone, MapPin } from "lucide-react"
-import { Card } from "@/components/ui/card"
 import { ContactForm } from "@/components/contact-form"
-import { SectionHeading } from "@/components/section-heading"
+import { siteConfig } from "@/lib/site-config"
 
 export function Contact() {
   return (
-    <section id="contact" className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8 scroll-mt-20">
-      <div className="container mx-auto max-w-5xl space-y-12">
-        <SectionHeading
-          eyebrow="Contact"
-          title="Tell me what you need built"
-          description="A website, SEO, design, or a campaign. Reply within one business day."
-          align="center"
-        />
+    <section id="contact" className="scroll-mt-24 border-t border-border px-5 sm:px-8 py-16 sm:py-24">
+      <div className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:gap-20">
+        <div>
+          <p className="font-label text-[11px] tracking-[0.18em] uppercase text-muted-foreground">07 · Contact</p>
+          <h2 className="mt-4 font-heading text-3xl sm:text-4xl font-medium tracking-tight leading-[1.08]">
+            Tell me what you need built.
+          </h2>
+          <p className="mt-4 max-w-sm text-muted-foreground leading-relaxed">
+            A website, SEO, design, or a campaign. I reply within one business day.
+          </p>
 
-        <div className="grid lg:grid-cols-3 gap-5">
-          <div className="space-y-4">
-            <Card className="p-5">
-              <Mail className="h-5 w-5 text-primary mb-3" />
-              <h3 className="font-heading font-semibold text-sm mb-1">Email</h3>
-              <a
-                href="mailto:bellarinseth@gmail.com"
-                className="text-sm text-muted-foreground hover:text-primary transition-colors break-all"
-              >
-                bellarinseth@gmail.com
-              </a>
-            </Card>
-            <Card className="p-5">
-              <Phone className="h-5 w-5 text-primary mb-3" />
-              <h3 className="font-heading font-semibold text-sm mb-1">Phone</h3>
-              <a href="tel:+254114627400" className="text-sm text-muted-foreground hover:text-primary block">
-                +254 114 627 400
-              </a>
-              <a href="tel:+254759433906" className="text-sm text-muted-foreground hover:text-primary block">
-                +254 759 433 906
-              </a>
-            </Card>
-            <Card className="p-5">
-              <MapPin className="h-5 w-5 text-primary mb-3" />
-              <h3 className="font-heading font-semibold text-sm mb-1">Location</h3>
-              <p className="text-sm text-muted-foreground">Nairobi, Kenya</p>
-            </Card>
-          </div>
-
-          <Card className="lg:col-span-2 p-5 sm:p-6">
-            <h3 className="font-heading font-semibold text-lg mb-4">Send a message</h3>
-            <ContactForm />
-          </Card>
+          <dl className="mt-10 space-y-5 text-sm">
+            <div>
+              <dt className="font-label text-[11px] tracking-[0.14em] uppercase text-muted-foreground">Email</dt>
+              <dd className="mt-1">
+                <a href={`mailto:${siteConfig.contact.email}`} className="hover:underline underline-offset-4">
+                  {siteConfig.contact.email}
+                </a>
+              </dd>
+            </div>
+            <div>
+              <dt className="font-label text-[11px] tracking-[0.14em] uppercase text-muted-foreground">Phone</dt>
+              <dd className="mt-1 space-y-1">
+                <a href="tel:+254114627400" className="block hover:underline underline-offset-4">
+                  {siteConfig.contact.phone.primary}
+                </a>
+                <a href="tel:+254759433906" className="block hover:underline underline-offset-4">
+                  {siteConfig.contact.phone.secondary}
+                </a>
+              </dd>
+            </div>
+            <div>
+              <dt className="font-label text-[11px] tracking-[0.14em] uppercase text-muted-foreground">Studio</dt>
+              <dd className="mt-1">Nairobi, Kenya</dd>
+            </div>
+          </dl>
         </div>
+
+        <ContactForm />
       </div>
     </section>
   )

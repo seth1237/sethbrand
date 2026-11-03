@@ -1,50 +1,39 @@
-import { Instagram, Facebook, Linkedin, Github, Youtube } from "lucide-react"
+import Link from "next/link"
 import { siteConfig } from "@/lib/site-config"
 
-function XIcon({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">
-      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.395 6.231H2.75l7.73-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-    </svg>
-  )
-}
-
 const socials = [
-  { icon: XIcon, href: siteConfig.social.twitter.url, label: "Follow on X (Twitter)" },
-  { icon: Instagram, href: siteConfig.social.instagram.url, label: "Follow on Instagram" },
-  { icon: Facebook, href: siteConfig.social.facebook.url, label: "Follow on Facebook" },
-  { icon: Linkedin, href: siteConfig.social.linkedin.url, label: "Connect on LinkedIn" },
-  { icon: Github, href: siteConfig.social.github.url, label: "View GitHub profile" },
-  { icon: Youtube, href: siteConfig.social.youtube?.url, label: "Watch on YouTube" },
+  { label: "X", href: siteConfig.social.twitter.url },
+  { label: "Instagram", href: siteConfig.social.instagram.url },
+  { label: "LinkedIn", href: siteConfig.social.linkedin.url },
+  { label: "GitHub", href: siteConfig.social.github.url },
+  { label: "YouTube", href: siteConfig.social.youtube?.url },
 ].filter((item) => !!item.href)
 
 export function SiteFooter() {
   return (
-    <footer className="glass-nav mt-4 pb-[env(safe-area-inset-bottom)]">
-      <div className="container mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-8 sm:py-10 flex flex-col sm:flex-row items-center justify-between gap-5">
-        <div className="text-center sm:text-left space-y-1">
-          <p className="font-heading font-semibold text-foreground">Seth Makori</p>
-          <p className="text-sm text-muted-foreground">
-            Websites, SEO, and marketing for Kenyan businesses.
-          </p>
+    <footer className="border-t border-border px-5 sm:px-8 pb-[env(safe-area-inset-bottom)]">
+      <div className="mx-auto flex max-w-6xl flex-col gap-6 py-8 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <p className="font-heading text-sm font-medium">Seth Makori</p>
+          <p className="mt-1 text-sm text-muted-foreground">Nairobi · websites, search, and design</p>
         </div>
-        <div className="flex flex-wrap items-center justify-center gap-2">
-          {socials.map(({ icon: Icon, href, label }) => (
+        <div className="flex flex-wrap gap-x-5 gap-y-2">
+          {socials.map((item) => (
             <a
-              key={label}
-              href={href}
+              key={item.label}
+              href={item.href}
               target="_blank"
               rel="noopener noreferrer"
-              aria-label={label}
-              className="inline-flex h-11 w-11 items-center justify-center rounded-full glass-neu text-muted-foreground hover:text-primary transition-colors"
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
-              <Icon className="h-4 w-4" />
+              {item.label}
             </a>
           ))}
+          <Link href="/privacy" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+            Privacy
+          </Link>
         </div>
-        <p className="text-xs text-muted-foreground">
-          © {new Date().getFullYear()} Seth Makori
-        </p>
+        <p className="text-xs text-muted-foreground">© {new Date().getFullYear()}</p>
       </div>
     </footer>
   )

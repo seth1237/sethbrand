@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react"
 import { Navigation } from "@/components/navigation"
 import { SectionHeading } from "@/components/section-heading"
 import { motion } from "framer-motion"
-import { X, ZoomIn } from "lucide-react"
+import { X } from "lucide-react"
 import { DEFAULT_POSTERS, type PosterItem } from "@/lib/content-defaults"
 
 export default function PortfolioPage() {
@@ -37,31 +37,26 @@ export default function PortfolioPage() {
     <main className="min-h-screen bg-background">
       <Navigation />
 
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 pt-[calc(5.5rem+env(safe-area-inset-top))] pb-16 sm:pt-28 sm:pb-20">
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-8 sm:mb-12"
-        >
+      <div className="mx-auto max-w-6xl px-5 sm:px-8 pt-[calc(6rem+env(safe-area-inset-top))] pb-16 sm:pt-32 sm:pb-24">
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="mb-10">
           <SectionHeading
-            eyebrow="Portfolio"
-            title="Design that sells"
-            description="Posters, campaigns, and brand work for events, churches, and medical businesses."
-            align="center"
+            index="Design"
+            title="Posters and campaigns"
+            description="Events, churches, medical, and social work."
           />
         </motion.div>
 
-        <div className="relative -mx-4 sm:mx-0 mb-8 sm:mb-12">
+        <div className="relative -mx-5 sm:mx-0 mb-10">
           <div className="overflow-x-auto overscroll-x-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-            <div className="flex sm:flex-wrap sm:justify-center gap-2 px-4 sm:px-0 min-w-max sm:min-w-0 pb-1">
+            <div className="flex gap-6 px-5 sm:px-0 min-w-max sm:min-w-0 border-b border-border">
               {categories.map((category) => (
                 <button
                   key={category}
                   onClick={() => setSelectedCategory(category)}
-                  className={`px-3.5 py-2 rounded-full text-sm font-medium whitespace-nowrap min-h-10 transition-all duration-300 ${
+                  className={`pb-3 text-sm whitespace-nowrap transition-colors ${
                     selectedCategory === category
-                      ? "bg-primary text-primary-foreground shadow-[4px_6px_12px_oklch(0.62_0.02_250_/_0.2)]"
-                      : "glass-neu text-muted-foreground hover:text-foreground"
+                      ? "text-foreground border-b border-foreground -mb-px"
+                      : "text-muted-foreground hover:text-foreground"
                   }`}
                 >
                   {category}
@@ -69,33 +64,22 @@ export default function PortfolioPage() {
               ))}
             </div>
           </div>
-          <div className="pointer-events-none absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-background sm:hidden" />
         </div>
 
-        <div className="grid grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-5">
-          {filteredItems.map((item, index) => (
-            <motion.div
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-3 gap-y-8 sm:gap-x-4">
+          {filteredItems.map((item) => (
+            <button
               key={item.id}
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.35, delay: Math.min(index * 0.03, 0.3) }}
-              className="group glass-neu glass-neu-hover rounded-2xl p-1 sm:p-1.5 cursor-pointer"
+              type="button"
+              className="group text-left cursor-pointer"
               onClick={() => setLightboxImage(item)}
             >
-              <div className="relative aspect-[3/4] rounded-xl overflow-hidden">
-                <img src={item.src} alt={item.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
-                <div className="media-overlay absolute inset-0 bg-black/60 transition-opacity duration-300 flex flex-col justify-end p-2.5 sm:p-5">
-                  <span className="font-label text-[9px] sm:text-[10px] tracking-widest uppercase text-primary mb-0.5">
-                    {item.group}
-                  </span>
-                  <h3 className="font-heading text-xs sm:text-lg font-semibold text-white line-clamp-2">{item.title}</h3>
-                  <p className="hidden sm:block text-sm text-white/70">{item.description}</p>
-                  <div className="hidden sm:flex absolute top-4 right-4 w-9 h-9 bg-white/15 rounded-full items-center justify-center">
-                    <ZoomIn className="w-4 h-4 text-white" />
-                  </div>
-                </div>
+              <div className="relative aspect-[3/4] overflow-hidden bg-muted">
+                <img src={item.src} alt={item.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]" />
               </div>
-            </motion.div>
+              <p className="mt-3 text-sm text-foreground">{item.title}</p>
+              <p className="mt-1 font-label text-[10px] tracking-[0.14em] uppercase text-muted-foreground">{item.group}</p>
+            </button>
           ))}
         </div>
 

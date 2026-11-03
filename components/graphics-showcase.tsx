@@ -4,72 +4,56 @@ import { useEffect, useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { SectionHeading } from "@/components/section-heading"
-import { Button } from "@/components/ui/button"
-import { ArrowRight } from "lucide-react"
 import { DEFAULT_POSTERS, type PosterItem } from "@/lib/content-defaults"
 
-const fallbackFeatured = DEFAULT_POSTERS.slice(0, 6)
-
 export function GraphicsShowcase() {
-  const [featured, setFeatured] = useState<PosterItem[]>(fallbackFeatured)
+  const [featured, setFeatured] = useState<PosterItem[]>(DEFAULT_POSTERS.slice(0, 4))
 
   useEffect(() => {
     fetch("/api/content/posters")
       .then((res) => res.json())
       .then((data) => {
         if (Array.isArray(data.posters) && data.posters.length > 0) {
-          setFeatured(data.posters.slice(0, 6))
+          setFeatured(data.posters.slice(0, 4))
         }
       })
       .catch(() => {})
   }, [])
 
   return (
-    <section className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8">
-      <div className="container mx-auto max-w-6xl space-y-8 sm:space-y-10">
-        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 sm:gap-6">
+    <section id="design" className="scroll-mt-24 border-t border-border px-5 sm:px-8 py-16 sm:py-24">
+      <div className="mx-auto max-w-6xl">
+        <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between mb-10">
           <SectionHeading
+            index="03"
             eyebrow="Design"
-            title="Campaigns, posters, and brand work"
-            description="A sample of graphics that sell — medical, events, church, and social campaigns."
+            title="Posters and campaigns"
+            description="A short sample. Medical, events, church, and social."
           />
-          <Button asChild variant="outline" className="shrink-0 self-stretch sm:self-auto min-h-11">
-            <Link href="/portfolio">
-              View full portfolio
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Link>
-          </Button>
+          <Link href="/portfolio" className="text-sm text-muted-foreground hover:text-foreground transition-colors shrink-0">
+            Full portfolio →
+          </Link>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5 sm:gap-4">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
           {featured.map((item) => (
-            <Link
-              key={item.id}
-              href="/portfolio"
-              className="group glass-neu glass-neu-hover rounded-2xl p-1 sm:p-1.5 block"
-            >
-              <div className="relative aspect-[3/4] rounded-xl overflow-hidden">
+            <Link key={item.id} href="/portfolio" className="group block">
+              <div className="relative aspect-[3/4] overflow-hidden bg-muted">
                 {item.src.startsWith("/api/") ? (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={item.src}
-                    alt={item.title}
-                    className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                  />
+                  <img src={item.src} alt={item.title} className="absolute inset-0 h-full w-full object-cover" />
                 ) : (
                   <Image
                     src={item.src}
                     alt={item.title}
                     fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
-                    sizes="(max-width: 768px) 50vw, 33vw"
+                    className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                    sizes="(max-width: 1024px) 50vw, 25vw"
                   />
                 )}
-                <div className="media-overlay absolute inset-0 bg-black/55 transition-opacity duration-300 flex flex-col justify-end p-2.5 sm:p-4">
-                  <p className="font-label text-[9px] sm:text-[10px] tracking-widest uppercase text-primary">{item.group}</p>
-                  <h3 className="font-heading text-xs sm:text-sm font-semibold text-white line-clamp-2">{item.title}</h3>
-                </div>
               </div>
+              <p className="mt-3 text-sm text-foreground">{item.title}</p>
+              <p className="font-label text-[10px] tracking-[0.14em] uppercase text-muted-foreground mt-1">{item.group}</p>
             </Link>
           ))}
         </div>
