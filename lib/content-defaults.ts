@@ -139,16 +139,6 @@ export const DEFAULT_POSTERS: PosterItem[] = [
 
 export const FEATURED_SITES: SiteItem[] = [
   {
-    id: "site-1",
-    title: "Boom Audio Visuals",
-    description:
-      "Event production site for a premium AV brand. Clear services, portfolio, and a contact flow that grew inquiries.",
-    image: "/boom-audio-visuals-website.webp",
-    tags: ["Events"],
-    link: "https://www.boomevents.co.ke/",
-    source: "default",
-  },
-  {
     id: "site-accord",
     title: "Accord Medical",
     description: "Medical equipment supplier. A catalog and storefront for clinics across Kenya.",
@@ -167,6 +157,15 @@ export const FEATURED_SITES: SiteItem[] = [
     source: "default",
   },
   {
+    id: "site-4",
+    title: "Amani Centre CBO",
+    description: "Community site for flood response and outreach. Fast on mobile, easy to update.",
+    image: "/community-organization-website.webp",
+    tags: ["Community"],
+    link: "https://www.amanicentercbo.org/",
+    source: "default",
+  },
+  {
     id: "site-3",
     title: "Haven Furnitures",
     description: "Furniture e-commerce with an admin dashboard for products and images.",
@@ -176,12 +175,13 @@ export const FEATURED_SITES: SiteItem[] = [
     source: "default",
   },
   {
-    id: "site-4",
-    title: "Amani Centre CBO",
-    description: "Community site for flood response and outreach. Fast on mobile, easy to update.",
-    image: "/community-organization-website.webp",
-    tags: ["Community"],
-    link: "https://www.amanicentercbo.org/",
+    id: "site-1",
+    title: "Boom Audio Visuals",
+    description:
+      "Event production site for a premium AV brand. Clear services, portfolio, and a contact flow that grew inquiries.",
+    image: "/boom-audio-visuals-website.webp",
+    tags: ["Events"],
+    link: "https://www.boomevents.co.ke/",
     source: "default",
   },
 ]

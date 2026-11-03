@@ -1,7 +1,107 @@
 "use client"
 
 import { ReactNode } from "react"
-import { motion } from "framer-motion"
+import { motion, useReducedMotion } from "framer-motion"
+
+const ease = [0.22, 1, 0.36, 1] as const
+
+export const revealChild = {
+  hidden: { opacity: 0, y: 28 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.7, ease },
+  },
+}
+
+export function staggerParent(stagger = 0.08, delay = 0) {
+  return {
+    hidden: {},
+    show: { transition: { staggerChildren: stagger, delayChildren: delay } },
+  }
+}
+
+export function Stagger({
+  children,
+  className,
+  stagger = 0.08,
+  delay = 0,
+  immediate = false,
+}: {
+  children: ReactNode
+  className?: string
+  stagger?: number
+  delay?: number
+  immediate?: boolean
+}) {
+  const reduce = useReducedMotion()
+  return (
+    <motion.div
+      className={className}
+      initial={reduce ? false : "hidden"}
+      animate={immediate && !reduce ? "show" : undefined}
+      whileInView={immediate || reduce ? undefined : "show"}
+      viewport={{ once: true, margin: "0px 0px -8% 0px" }}
+      variants={staggerParent(stagger, delay)}
+    >
+      {children}
+    </motion.div>
+  )
+}
+
+export function StaggerItem({ children, className }: { children: ReactNode; className?: string }) {
+  return (
+    <motion.div className={className} variants={revealChild}>
+      {children}
+    </motion.div>
+  )
+}
+
+export function RevealWords({
+  text,
+  className,
+  mode = "view",
+}: {
+  text: string
+  className?: string
+  mode?: "view" | "mount" | "parent"
+}) {
+  const reduce = useReducedMotion()
+  const words = text.split(" ")
+  const controlled = mode === "parent"
+  return (
+    <motion.span
+      className={className}
+      variants={staggerParent(0.045)}
+      {...(controlled
+        ? {}
+        : {
+            initial: reduce ? false : ("hidden" as const),
+            animate: !reduce && mode === "mount" ? ("show" as const) : undefined,
+            whileInView: !reduce && mode === "view" ? ("show" as const) : undefined,
+            viewport: { once: true, margin: "0px 0px -8% 0px" },
+          })}
+    >
+      {words.map((word, index) => (
+        <motion.span
+          key={`${word}-${index}`}
+          className="inline-block overflow-hidden align-bottom pb-[0.08em] mr-[0.22em] last:mr-0"
+          variants={{ hidden: {}, show: {} }}
+        >
+          <motion.span
+            className="inline-block"
+            variants={{
+              hidden: { y: "110%" },
+              show: { y: "0%", transition: { duration: 0.72, ease } },
+            }}
+          >
+            {word}
+          </motion.span>
+        </motion.span>
+      ))}
+    </motion.span>
+  )
+}
 
 // Variants for parent container animations
 export const containerVariants = {
@@ -92,63 +192,6 @@ export function SlideIn({ children, className, direction = "left", delay = 0 }: 
         duration: 0.7,
         delay,
         ease: "easeOut"
-      }}
-      className={className}
-    >
-      {children}
-    </motion.div>
-  )
-}
-
-// Staggered container for multiple elements
-interface StaggerContainerProps {
-  children: ReactNode
-  className?: string
-  delayFactor?: number
-}
-
-export function StaggerContainer({ children, className, delayFactor = 0.1 }: StaggerContainerProps) {
-  return (
-    <motion.div
-      variants={{
-        hidden: { opacity: 0 },
-        visible: {
-          opacity: 1,
-          transition: {
-            staggerChildren: delayFactor
-          }
-        }
-      }}
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, margin: "-100px" }}
-      className={className}
-    >
-      {children}
-    </motion.div>
-  )
-}
-
-// Item for stagger container
-interface StaggerItemProps {
-  children: ReactNode
-  className?: string
-}
-
-export function StaggerItem({ children, className }: StaggerItemProps) {
-  return (
-    <motion.div
-      variants={{
-        hidden: { opacity: 0, y: 20 },
-        visible: {
-          opacity: 1,
-          y: 0,
-          transition: {
-            type: "spring",
-            stiffness: 100,
-            damping: 12
-          }
-        }
       }}
       className={className}
     >

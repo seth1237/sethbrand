@@ -1,11 +1,12 @@
 import { ContactForm } from "@/components/contact-form"
+import { Stagger, StaggerItem } from "@/components/animations"
 import { siteConfig } from "@/lib/site-config"
 
 export function Contact() {
   return (
     <section id="contact" className="scroll-mt-24 border-t border-border px-5 sm:px-8 py-16 sm:py-24">
-      <div className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:gap-20">
-        <div>
+      <Stagger className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:gap-20" stagger={0.12}>
+        <StaggerItem>
           <p className="font-label text-[11px] tracking-[0.18em] uppercase text-muted-foreground">07 · Contact</p>
           <h2 className="mt-4 font-heading text-3xl sm:text-4xl font-medium tracking-tight leading-[1.08]">
             Tell me what you need built.
@@ -39,10 +40,12 @@ export function Contact() {
               <dd className="mt-1">Nairobi, Kenya</dd>
             </div>
           </dl>
-        </div>
+        </StaggerItem>
 
-        <ContactForm />
-      </div>
+        <StaggerItem>
+          <ContactForm />
+        </StaggerItem>
+      </Stagger>
     </section>
   )
 }

@@ -1,3 +1,5 @@
+import { Stagger, StaggerItem } from "@/components/animations"
+
 const testimonials = [
   {
     name: "James Ondiek",
@@ -21,9 +23,10 @@ export function Testimonials() {
     <section className="border-t border-border px-5 sm:px-8 py-16 sm:py-24">
       <div className="mx-auto max-w-6xl">
         <p className="font-label text-[11px] tracking-[0.18em] uppercase text-muted-foreground">05 · Clients</p>
-        <div className="mt-10 grid gap-12 md:grid-cols-3 md:gap-10">
+        <Stagger className="mt-10 grid gap-12 md:grid-cols-3 md:gap-10" stagger={0.12}>
           {testimonials.map((item) => (
-            <figure key={item.name}>
+            <StaggerItem key={item.name}>
+            <figure>
               <blockquote className="font-heading text-xl sm:text-[1.35rem] font-medium leading-snug tracking-tight text-foreground">
                 “{item.quote}”
               </blockquote>
@@ -32,8 +35,9 @@ export function Testimonials() {
                 <span className="block">{item.role}</span>
               </figcaption>
             </figure>
+            </StaggerItem>
           ))}
-        </div>
+        </Stagger>
       </div>
     </section>
   )

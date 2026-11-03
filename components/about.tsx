@@ -1,4 +1,5 @@
 import { SectionHeading } from "@/components/section-heading"
+import { Stagger, StaggerItem } from "@/components/animations"
 
 const skills = [
   { title: "Web", detail: "Next.js and React, built to convert." },
@@ -13,27 +14,27 @@ export function About() {
       <div className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:gap-20">
         <div>
           <SectionHeading index="04" eyebrow="About" title="One person for the whole pipeline" />
-          <div className="mt-8 space-y-5 text-base leading-relaxed text-muted-foreground max-w-xl">
-            <p>
+          <Stagger className="mt-8 max-w-xl space-y-5 text-base leading-relaxed text-muted-foreground" stagger={0.1}>
+            <StaggerItem>
               I&apos;m a full-stack developer with a background in Electronics and Instrumentation, now doing a
               Master&apos;s in Artificial Intelligence.
-            </p>
-            <p>
+            </StaggerItem>
+            <StaggerItem>
               I&apos;ve shipped work for Amani Centre CBO, Accord Medical Supplies, and event, fitness, and furniture
               brands that needed something they could grow with.
-            </p>
-            <p>If you need a site, a ranking plan, or campaign creative, you talk to one person.</p>
-          </div>
+            </StaggerItem>
+            <StaggerItem>If you need a site, a ranking plan, or campaign creative, you talk to one person.</StaggerItem>
+          </Stagger>
         </div>
 
-        <dl className="lg:pt-16 divide-y divide-border border-y border-border">
+        <Stagger className="lg:pt-16 divide-y divide-border border-y border-border" stagger={0.08}>
           {skills.map((skill) => (
-            <div key={skill.title} className="grid grid-cols-[6.5rem_1fr] gap-4 py-4">
-              <dt className="text-sm font-medium text-foreground">{skill.title}</dt>
-              <dd className="text-sm leading-relaxed text-muted-foreground">{skill.detail}</dd>
-            </div>
+            <StaggerItem key={skill.title} className="grid grid-cols-[6.5rem_1fr] gap-4 py-4">
+              <p className="text-sm font-medium text-foreground">{skill.title}</p>
+              <p className="text-sm leading-relaxed text-muted-foreground">{skill.detail}</p>
+            </StaggerItem>
           ))}
-        </dl>
+        </Stagger>
       </div>
     </section>
   )

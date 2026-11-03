@@ -1,6 +1,8 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { motion, useReducedMotion } from "framer-motion"
+import { revealChild, staggerParent } from "@/components/animations"
 import Link from "next/link"
 import { SectionHeading } from "@/components/section-heading"
 import { LiveSiteFrame } from "@/components/live-site-frame"
@@ -33,6 +35,7 @@ function hostOf(link: string) {
 }
 
 export function Projects() {
+  const reduce = useReducedMotion()
   const [more, setMore] = useState<SiteItem[]>(DEFAULT_SITES.filter((site) => !FEATURED_SITES.some((item) => item.id === site.id)))
   const [showAll, setShowAll] = useState(false)
 
@@ -71,16 +74,33 @@ export function Projects() {
 
         <div className="grid gap-16 sm:gap-24">
           {FEATURED_SITES.map((project, index) => (
-            <article key={project.id} className="grid items-start gap-6 lg:grid-cols-12 lg:gap-12">
-              <div className="min-w-0 lg:col-span-8">
+            <motion.article
+              key={project.id}
+              className="grid items-start gap-6 lg:grid-cols-12 lg:gap-12"
+              initial={reduce ? false : "hidden"}
+              whileInView={reduce ? undefined : "show"}
+              viewport={{ once: true, margin: "0px 0px -10% 0px" }}
+              variants={staggerParent(0.12)}
+            >
+              <motion.div
+                className="min-w-0 lg:col-span-8"
+                variants={{
+                  hidden: { opacity: 0, y: 36, scale: 0.96 },
+                  show: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.75, ease: [0.22, 1, 0.36, 1] } },
+                }}
+                style={{ transformOrigin: "50% 0%" }}
+              >
                 <LiveSiteFrame url={project.link} title={project.title} />
-              </div>
-              <div className="min-w-0 lg:col-span-4 lg:pt-8">
-                <p className="font-label text-[11px] tracking-[0.16em] text-muted-foreground">
+              </motion.div>
+              <motion.div
+                className="min-w-0 lg:col-span-4 lg:pt-8"
+                variants={{ hidden: {}, show: { transition: { staggerChildren: 0.08 } } }}
+              >
+                <motion.p variants={revealChild} className="font-label text-[11px] tracking-[0.16em] text-muted-foreground">
                   {String(index + 1).padStart(2, "0")}
                   {project.tags[0] ? `  ·  ${project.tags[0]}` : ""}
-                </p>
-                <h3 className="mt-3 w-fit bg-white px-2 py-1 font-heading text-2xl font-medium tracking-tight text-neutral-950 sm:text-3xl">
+                </motion.p>
+                <motion.h3 variants={revealChild} className="mt-3 w-fit bg-white px-2 py-1 font-heading text-2xl font-medium tracking-tight text-neutral-950 sm:text-3xl">
                   <a
                     href={project.link}
                     target="_blank"
@@ -90,18 +110,19 @@ export function Projects() {
                   >
                     {project.title}
                   </a>
-                </h3>
-                <p className="mt-3 text-sm leading-relaxed text-muted-foreground sm:text-base">{project.description}</p>
-                <a
+                </motion.h3>
+                <motion.p variants={revealChild} className="mt-3 text-sm leading-relaxed text-muted-foreground sm:text-base">{project.description}</motion.p>
+                <motion.a
+                  variants={revealChild}
                   href={project.link}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="mt-5 inline-flex text-sm text-foreground underline-offset-4 hover:underline"
                 >
                   Visit site
-                </a>
-              </div>
-            </article>
+                </motion.a>
+              </motion.div>
+            </motion.article>
           ))}
         </div>
 

@@ -1,5 +1,6 @@
 import Link from "next/link"
 import { SectionHeading } from "@/components/section-heading"
+import { Stagger, StaggerItem } from "@/components/animations"
 
 const services = [
   {
@@ -35,9 +36,9 @@ export function Services() {
           description="Most clients start with a website, then add search and campaigns."
         />
 
-        <div className="mt-12 divide-y divide-border border-y border-border">
+        <Stagger className="mt-12 divide-y divide-border border-y border-border" stagger={0.1}>
           {services.map((service, index) => (
-            <div
+            <StaggerItem
               key={service.title}
               className="grid gap-3 py-7 sm:grid-cols-[4rem_14rem_1fr] sm:gap-8 sm:py-8 sm:items-baseline"
             >
@@ -49,9 +50,9 @@ export function Services() {
                 <p className="text-muted-foreground leading-relaxed">{service.description}</p>
                 <p className="mt-2 text-sm text-muted-foreground/80">{service.features}</p>
               </div>
-            </div>
+            </StaggerItem>
           ))}
-        </div>
+        </Stagger>
 
         <Link
           href="/services"

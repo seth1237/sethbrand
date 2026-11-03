@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { SectionHeading } from "@/components/section-heading"
+import { Stagger, StaggerItem } from "@/components/animations"
 import { DEFAULT_POSTERS, type PosterItem } from "@/lib/content-defaults"
 
 export function GraphicsShowcase() {
@@ -35,9 +36,10 @@ export function GraphicsShowcase() {
           </Link>
         </div>
 
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        <Stagger className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4" stagger={0.08}>
           {featured.map((item) => (
-            <Link key={item.id} href="/portfolio" className="group block">
+            <StaggerItem key={item.id}>
+            <Link href="/portfolio" className="group block">
               <div className="relative aspect-[3/4] overflow-hidden bg-muted">
                 {item.src.startsWith("/api/") ? (
                   // eslint-disable-next-line @next/next/no-img-element
@@ -55,8 +57,9 @@ export function GraphicsShowcase() {
               <p className="mt-3 text-sm text-foreground">{item.title}</p>
               <p className="font-label text-[10px] tracking-[0.14em] uppercase text-muted-foreground mt-1">{item.group}</p>
             </Link>
+            </StaggerItem>
           ))}
-        </div>
+        </Stagger>
       </div>
     </section>
   )

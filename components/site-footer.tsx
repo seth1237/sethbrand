@@ -1,4 +1,5 @@
 import Link from "next/link"
+import { Stagger, StaggerItem } from "@/components/animations"
 import { siteConfig } from "@/lib/site-config"
 
 const socials = [
@@ -12,12 +13,12 @@ const socials = [
 export function SiteFooter() {
   return (
     <footer className="border-t border-border px-5 sm:px-8 pb-[env(safe-area-inset-bottom)]">
-      <div className="mx-auto flex max-w-6xl flex-col gap-6 py-8 sm:flex-row sm:items-center sm:justify-between">
-        <div>
+      <Stagger className="mx-auto flex max-w-6xl flex-col gap-6 py-8 sm:flex-row sm:items-center sm:justify-between" stagger={0.08}>
+        <StaggerItem>
           <p className="font-heading text-sm font-medium">Seth Makori</p>
           <p className="mt-1 text-sm text-muted-foreground">Nairobi · websites, search, and design</p>
-        </div>
-        <div className="flex flex-wrap gap-x-5 gap-y-2">
+        </StaggerItem>
+        <StaggerItem className="flex flex-wrap gap-x-5 gap-y-2">
           {socials.map((item) => (
             <a
               key={item.label}
@@ -32,9 +33,11 @@ export function SiteFooter() {
           <Link href="/privacy" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
             Privacy
           </Link>
-        </div>
-        <p className="text-xs text-muted-foreground">© {new Date().getFullYear()}</p>
-      </div>
+        </StaggerItem>
+        <StaggerItem>
+          <p className="text-xs text-muted-foreground">© {new Date().getFullYear()}</p>
+        </StaggerItem>
+      </Stagger>
     </footer>
   )
 }

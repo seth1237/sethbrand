@@ -1,6 +1,8 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { motion, useReducedMotion } from "framer-motion"
+import { RevealWords, revealChild, staggerParent } from "@/components/animations"
 import { siteConfig } from "@/lib/site-config"
 
 const words = ["customers", "leads"]
@@ -15,6 +17,7 @@ export function Hero() {
   const [count, setCount] = useState(0)
   const [phase, setPhase] = useState<"hold" | "delete" | "type">("type")
   const [buzz, setBuzz] = useState(false)
+  const reduce = useReducedMotion()
 
   useEffect(() => {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches
@@ -60,47 +63,60 @@ export function Hero() {
         <h1 className="max-w-4xl font-heading text-[2.6rem] sm:text-6xl lg:text-7xl font-medium leading-[1.02] tracking-tight text-foreground">
           <span className="sr-only">Websites that get found, and businesses that get customers.</span>
           <span aria-hidden>
-            Websites that get found, and businesses that get{" "}
-            <span className={`inline-block ${buzz ? "hero-type-buzz" : ""}`}>
-              {shown}
-              <span className="hero-caret" />
+            <RevealWords text="Websites that get found, and businesses that get" mode="mount" />{" "}
+            <span className="inline-block overflow-hidden align-bottom pb-[0.08em]">
+              <motion.span
+                className={`inline-block ${buzz ? "hero-type-buzz" : ""}`}
+                initial={reduce ? false : { y: "110%" }}
+                animate={{ y: "0%" }}
+                transition={{ duration: 0.72, delay: reduce ? 0 : 0.42, ease: [0.22, 1, 0.36, 1] }}
+              >
+                {shown}
+                <span className="hero-caret" />
+              </motion.span>
             </span>
           </span>
         </h1>
 
-        <p className="mt-6 max-w-xl text-base sm:text-lg leading-relaxed text-muted-foreground">
-          I design, build, and optimize a site, then run the SEO and marketing
-          that bring people to it. One person, the whole pipeline.
-        </p>
+        <motion.div
+          initial={reduce ? false : "hidden"}
+          animate={reduce ? undefined : "show"}
+          variants={staggerParent(0.1, 0.55)}
+        >
+          <motion.p variants={revealChild} className="mt-6 max-w-xl text-base sm:text-lg leading-relaxed text-muted-foreground">
+            I design, build, and optimize a site, then run the SEO and marketing
+            that bring people to it. One person, the whole pipeline.
+          </motion.p>
 
-        <div className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-4">
-          <a
-            href="#contact"
-            className="group inline-flex items-center gap-2 text-sm font-medium text-foreground"
-          >
-            Start a project
-            <span className="transition-transform duration-200 group-hover:translate-x-1" aria-hidden>
-              →
-            </span>
-          </a>
-          <a href="#projects" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-            Selected work
-          </a>
-        </div>
-
-        <div className="mt-14 flex flex-wrap gap-x-6 gap-y-2 border-t border-border pt-5">
-          {links.map((item) => (
+          <motion.div variants={revealChild} className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-4">
             <a
-              key={item.label}
-              href={item.href}
-              target={item.href.startsWith("mailto:") ? undefined : "_blank"}
-              rel={item.href.startsWith("mailto:") ? undefined : "noopener noreferrer"}
-              className="font-label text-[11px] tracking-[0.14em] uppercase text-muted-foreground hover:text-foreground transition-colors"
+              href="#contact"
+              className="group inline-flex items-center gap-2 text-sm font-medium text-foreground"
             >
-              {item.label}
+              Start a project
+              <span className="transition-transform duration-200 group-hover:translate-x-1" aria-hidden>
+                →
+              </span>
             </a>
-          ))}
-        </div>
+            <a href="#projects" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+              Selected work
+            </a>
+          </motion.div>
+
+          <motion.div variants={revealChild} className="mt-14 flex flex-wrap gap-x-6 gap-y-2 border-t border-border pt-5">
+            {links.map((item) => (
+              <a
+                key={item.label}
+                href={item.href}
+                target={item.href.startsWith("mailto:") ? undefined : "_blank"}
+                rel={item.href.startsWith("mailto:") ? undefined : "noopener noreferrer"}
+                className="font-label text-[11px] tracking-[0.14em] uppercase text-muted-foreground hover:text-foreground transition-colors"
+              >
+                {item.label}
+              </a>
+            ))}
+          </motion.div>
+        </motion.div>
       </div>
     </section>
   )

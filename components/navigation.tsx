@@ -3,8 +3,10 @@
 import { useEffect, useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import { motion, useReducedMotion } from "framer-motion"
 import { Menu, X } from "lucide-react"
 import { ThemeToggle } from "./theme-toggle"
+import { revealChild, staggerParent } from "@/components/animations"
 
 const links = [
   { label: "Work", href: "/#projects" },
@@ -18,6 +20,7 @@ export function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [open, setOpen] = useState(false)
   const pathname = usePathname()
+  const reduce = useReducedMotion()
 
   useEffect(() => {
     const onScroll = () => setIsScrolled(window.scrollY > 8)
@@ -43,23 +46,37 @@ export function Navigation() {
         isScrolled || open ? "bg-background/90 backdrop-blur-md border-b border-border" : "bg-transparent"
       }`}
     >
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5 sm:px-8">
-        <Link href="/" className="font-heading text-[15px] font-medium tracking-tight text-foreground">
-          Seth Makori
-        </Link>
+      <motion.div
+        className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5 sm:px-8"
+        initial={reduce ? false : "hidden"}
+        animate={reduce ? undefined : "show"}
+        variants={staggerParent(0.06, 0.05)}
+      >
+        <motion.div variants={revealChild}>
+          <Link href="/" className="font-heading text-[15px] font-medium tracking-tight text-foreground">
+            Seth Makori
+          </Link>
+        </motion.div>
 
-        <nav className="hidden md:flex items-center gap-7" aria-label="Main">
+        <motion.nav
+          className="hidden md:flex items-center gap-7"
+          aria-label="Main"
+          variants={{ hidden: {}, show: { transition: { staggerChildren: 0.05 } } }}
+        >
           {links.map((item) => (
-            <Link
-              key={item.label}
-              href={item.href}
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-            >
-              {item.label}
-            </Link>
+            <motion.div key={item.label} variants={revealChild}>
+              <Link
+                href={item.href}
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+              >
+                {item.label}
+              </Link>
+            </motion.div>
           ))}
-          <ThemeToggle />
-        </nav>
+          <motion.div variants={revealChild}>
+            <ThemeToggle />
+          </motion.div>
+        </motion.nav>
 
         <div className="flex items-center gap-1 md:hidden">
           <ThemeToggle />
@@ -73,7 +90,7 @@ export function Navigation() {
             {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
         </div>
-      </div>
+      </motion.div>
 
       {open && (
         <nav

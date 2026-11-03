@@ -1,3 +1,5 @@
+import { Stagger, StaggerItem } from "@/components/animations"
+
 const experience = [
   {
     role: "Digital Marketing",
@@ -39,25 +41,25 @@ export function Experience() {
       <div className="mx-auto max-w-6xl grid gap-14 lg:grid-cols-2">
         <div>
           <p className="font-label text-[11px] tracking-[0.18em] uppercase text-muted-foreground">06 · Work</p>
-          <div className="mt-6 divide-y divide-border border-y border-border">
+          <Stagger className="mt-6 divide-y divide-border border-y border-border" stagger={0.1}>
             {experience.map((item) => (
-              <div key={item.role + item.company} className="py-5">
+              <StaggerItem key={item.role + item.company} className="py-5">
                 <div className="flex items-baseline justify-between gap-4">
                   <h3 className="font-medium text-foreground">{item.role}</h3>
                   <span className="font-label text-[11px] text-muted-foreground shrink-0">{item.period}</span>
                 </div>
                 <p className="mt-1 text-sm text-foreground/80">{item.company}</p>
                 <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{item.description}</p>
-              </div>
+              </StaggerItem>
             ))}
-          </div>
+          </Stagger>
         </div>
 
         <div>
           <p className="font-label text-[11px] tracking-[0.18em] uppercase text-muted-foreground">Education</p>
-          <div className="mt-6 divide-y divide-border border-y border-border">
+          <Stagger className="mt-6 divide-y divide-border border-y border-border" stagger={0.1}>
             {education.map((item) => (
-              <div key={item.degree} className="py-5">
+              <StaggerItem key={item.degree} className="py-5">
                 <div className="flex items-baseline justify-between gap-4">
                   <h3 className="font-medium text-foreground">{item.degree}</h3>
                   <span className="font-label text-[11px] text-muted-foreground shrink-0">{item.period}</span>
@@ -66,9 +68,9 @@ export function Experience() {
                   {item.institution}
                   {item.details ? ` · ${item.details}` : ""}
                 </p>
-              </div>
+              </StaggerItem>
             ))}
-          </div>
+          </Stagger>
           <p className="mt-6 text-sm leading-relaxed text-muted-foreground">
             Software Engineering and AI, ALX Africa. Machine Learning, Braitacademy. Frontend, Power Learn Project.
           </p>
