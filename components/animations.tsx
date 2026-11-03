@@ -49,6 +49,22 @@ export function Stagger({
   )
 }
 
+export function StaggerContainer({
+  children,
+  className,
+  delayFactor = 0.1,
+}: {
+  children: ReactNode
+  className?: string
+  delayFactor?: number
+}) {
+  return (
+    <Stagger className={className} stagger={delayFactor}>
+      {children}
+    </Stagger>
+  )
+}
+
 export function StaggerItem({ children, className }: { children: ReactNode; className?: string }) {
   return (
     <motion.div className={className} variants={revealChild}>
