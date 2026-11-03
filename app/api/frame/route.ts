@@ -26,33 +26,27 @@ function absolutize(html: string, origin: string) {
     })
 }
 
+function stripNextClient(html: string) {
+  return html
+    .replace(/<link\b[^>]*\bas=["']script["'][^>]*>/gi, (tag) => (/\/_next\//i.test(tag) ? "" : tag))
+    .replace(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi, (full, attrs: string, body: string) => {
+      const src = /src=["']([^"']+)["']/i.exec(attrs)?.[1] ?? ""
+      if (src.includes("/_next/static/")) return ""
+      if (body.includes("__next_f") || body.includes("__NEXT_DATA__")) return ""
+      return full
+    })
+}
+
 function bridge(origin: string) {
   return `(function(){
   var ORIGIN=${JSON.stringify(origin)};
-  var log=console.error;
-  console.error=function(){
-    try{
-      var parts=[];
-      for(var i=0;i<arguments.length;i++){
-        var a=arguments[i];
-        parts.push(a&&a.stack?a.stack:String(a));
-      }
-      document.documentElement.setAttribute("data-preview-error",parts.join("\\n").slice(0,2000));
-    }catch(err){}
-    return log.apply(console,arguments);
-  };
   var ofetch=window.fetch;
   if(ofetch){
     window.fetch=function(input,init){
-      var url="";
       try{
-        url=typeof input==="string"?input:(input&&input.url)||"";
         if(typeof input==="string"&&input.charAt(0)==="/")input=ORIGIN+input;
       }catch(e){}
-      return ofetch.call(this,input,init).then(function(res){return res;},function(err){
-        document.documentElement.setAttribute("data-fetch-fail","fetch fail "+url+" => "+String(err));
-        throw err;
-      });
+      return ofetch.call(this,input,init);
     };
   }
   var mem={};
@@ -126,11 +120,13 @@ export async function GET(req: NextRequest) {
 
   const origin = `${finalUrl.protocol}//${finalUrl.host}`
   const headInject = `<base href="${origin}/"><script>${bridge(origin)}</script>`
-  let page = absolutize(
-    html
-      .replace(/<meta[^>]+http-equiv=["']content-security-policy["'][^>]*>/gi, "")
-      .replace(/<base\b[^>]*>/gi, ""),
-    origin,
+  let page = stripNextClient(
+    absolutize(
+      html
+        .replace(/<meta[^>]+http-equiv=["']content-security-policy["'][^>]*>/gi, "")
+        .replace(/<base\b[^>]*>/gi, ""),
+      origin,
+    ),
   )
 
   if (/<head[^>]*>/i.test(page)) {
