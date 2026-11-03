@@ -256,6 +256,46 @@
   .animate-fade-in {
     animation: fade-in 0.3s ease-out forwards;
   }
+
+  .hero-caret {
+    display: inline-block;
+    width: 0.06em;
+    height: 0.78em;
+    margin-left: 0.06em;
+    background: currentColor;
+    vertical-align: -0.06em;
+    animation: hero-caret-blink 1s steps(1) infinite;
+  }
+
+  .hero-type-buzz {
+    animation: hero-type-buzz 90ms linear;
+  }
+
+  @keyframes hero-caret-blink {
+    0%,
+    45% {
+      opacity: 1;
+    }
+    50%,
+    100% {
+      opacity: 0;
+    }
+  }
+
+  @keyframes hero-type-buzz {
+    0% {
+      transform: translate(0, 0);
+    }
+    35% {
+      transform: translate(0.6px, -0.4px);
+    }
+    70% {
+      transform: translate(-0.45px, 0.35px);
+    }
+    100% {
+      transform: translate(0, 0);
+    }
+  }
 }
 
 @view-transition {

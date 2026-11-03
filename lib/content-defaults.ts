@@ -137,25 +137,33 @@ export const DEFAULT_POSTERS: PosterItem[] = [
   })),
 ]
 
-export const DEFAULT_SITES: SiteItem[] = [
+export const FEATURED_SITES: SiteItem[] = [
   {
     id: "site-1",
     title: "Boom Audio Visuals",
     description:
       "Event production site for a premium AV brand. Clear services, portfolio, and a contact flow that grew inquiries.",
     image: "/boom-audio-visuals-website.webp",
-    tags: ["Next.js", "Events"],
-    link: "https://boomevents.co.ke/",
+    tags: ["Events"],
+    link: "https://www.boomevents.co.ke/",
     source: "default",
   },
   {
-    id: "site-2",
-    title: "Astermed Medical Supplies",
-    description:
-      "Product catalog for a medical supplier — upload, featured items, and a clean storefront for clinics.",
+    id: "site-accord",
+    title: "Accord Medical",
+    description: "Medical equipment supplier. A catalog and storefront for clinics across Kenya.",
     image: "/astermed-medical-supplies-logo.webp",
-    tags: ["Catalog", "Medical"],
-    link: "https://www.astermedsupplies.co.ke/",
+    tags: ["Medical"],
+    link: "https://www.accordmedical.co.ke/",
+    source: "default",
+  },
+  {
+    id: "site-rai",
+    title: "Rai Merchants",
+    description: "Phones, accessories, and gadgets, built as a shop for Nairobi.",
+    image: "/placeholder.webp",
+    tags: ["Retail"],
+    link: "https://www.raimerchants.co.ke/",
     source: "default",
   },
   {
@@ -163,7 +171,7 @@ export const DEFAULT_SITES: SiteItem[] = [
     title: "Haven Furnitures",
     description: "Furniture e-commerce with an admin dashboard for products and images.",
     image: "/modern-furniture-website-dashboard.webp",
-    tags: ["E-commerce", "Dashboard"],
+    tags: ["E-commerce"],
     link: "https://www.havenlivingfurniture.co.ke/",
     source: "default",
   },
@@ -172,8 +180,22 @@ export const DEFAULT_SITES: SiteItem[] = [
     title: "Amani Centre CBO",
     description: "Community site for flood response and outreach. Fast on mobile, easy to update.",
     image: "/community-organization-website.webp",
-    tags: ["NGO", "Community"],
+    tags: ["Community"],
     link: "https://www.amanicentercbo.org/",
+    source: "default",
+  },
+]
+
+export const DEFAULT_SITES: SiteItem[] = [
+  ...FEATURED_SITES,
+  {
+    id: "site-2",
+    title: "Astermed Medical Supplies",
+    description:
+      "Product catalog for a medical supplier — upload, featured items, and a clean storefront for clinics.",
+    image: "/astermed-medical-supplies-logo.webp",
+    tags: ["Catalog", "Medical"],
+    link: "https://www.astermedsupplies.co.ke/",
     source: "default",
   },
   {

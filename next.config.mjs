@@ -1,5 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Dev chunk names stay stable, and an earlier immutable cache stored the
+  // old homepage script. A prefix makes the browser request a fresh URL.
+  ...(process.env.NODE_ENV === "production" ? {} : { assetPrefix: "/dev-assets" }),
   // Enable modern JavaScript output (avoid legacy bundles)
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',
@@ -24,11 +27,13 @@ const nextConfig = {
   // Optimize production builds
   productionBrowserSourceMaps: false,
   poweredByHeader: false,
-  // Headers for caching and security
+  // Headers for caching and security.
+  // Dev chunk URLs stay stable while the file changes, so a year-long
+  // immutable cache keeps serving the previous homepage script.
   async headers() {
-    return [
+    const headers = [
       {
-        source: '/(.*)',
+        source: '/((?!api/frame).*)',
         headers: [
           { key: 'X-Frame-Options', value: 'DENY' },
           { key: 'X-Content-Type-Options', value: 'nosniff' },
@@ -38,6 +43,11 @@ const nextConfig = {
           { key: 'Link', value: '<https://codewithseth.co.ke>; rel="canonical"' },
         ],
       },
+    ]
+
+    if (process.env.NODE_ENV !== 'production') return headers
+
+    headers.push(
       {
         source: '/_next/static/(.*)',
         headers: [
@@ -56,7 +66,13 @@ const nextConfig = {
           { key: 'Cache-Control', value: 'public, max-age=31536000, stale-while-revalidate=86400' },
         ],
       },
-    ]
+    )
+
+    return headers
+  },
+  async rewrites() {
+    if (process.env.NODE_ENV === "production") return []
+    return [{ source: "/dev-assets/_next/:path*", destination: "/_next/:path*" }]
   },
 }
 

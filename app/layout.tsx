@@ -62,7 +62,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 5,
   viewportFit: "cover",
-  themeColor: "#f6f5f2",
+  themeColor: "#1a1917",
 }
 
 const display = Space_Grotesk({
@@ -124,7 +124,7 @@ export default function RootLayout({
   }
 
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" className="dark" suppressHydrationWarning>
       <head>
         {/* Performance / SEO hints */}
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -134,7 +134,7 @@ export default function RootLayout({
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-        <meta name="theme-color" content="#f6f5f2" />
+        <meta name="theme-color" content="#1a1917" />
         <meta name="description" content="Websites that get found, and businesses that get customers. Web development, SEO, design, and marketing in Nairobi, Kenya." />
         <script
           type="application/ld+json"
@@ -146,7 +146,7 @@ export default function RootLayout({
         />
       </head>
       <body className={`font-sans ${GeistSans.variable} ${GeistMono.variable} ${display.variable} ${monoLabel.variable} antialiased`}>
-        <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false} disableTransitionOnChange>
           <Suspense fallback={null}>
             <PageTransition>{children}</PageTransition>
           </Suspense>
