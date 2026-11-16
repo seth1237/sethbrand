@@ -88,6 +88,7 @@ export function RevealWords({
   return (
     <motion.span
       className={className}
+      aria-hidden="true"
       variants={staggerParent(0.045)}
       {...(controlled
         ? {}

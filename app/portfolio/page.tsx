@@ -6,6 +6,7 @@ import { SectionHeading } from "@/components/section-heading"
 import { motion } from "framer-motion"
 import { X } from "lucide-react"
 import { DEFAULT_POSTERS, type PosterItem } from "@/lib/content-defaults"
+import { siteConfig } from "@/lib/site-config"
 
 export default function PortfolioPage() {
   const [items, setItems] = useState<PosterItem[]>(DEFAULT_POSTERS)
@@ -41,9 +42,17 @@ export default function PortfolioPage() {
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="mb-10">
           <SectionHeading
             index="Design"
-            title="Posters and campaigns"
-            description="Events, churches, medical, and social work."
+            title="Posters, campaigns, and brand work"
+            description="Events, churches, medical, and social — the graphics half of the studio."
           />
+          <a
+            href={siteConfig.moreDesigns}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-5 inline-flex text-sm text-[#E8702A] underline-offset-4 hover:underline"
+          >
+            Access more designs →
+          </a>
         </motion.div>
 
         <div className="relative -mx-5 sm:mx-0 mb-10">
@@ -55,7 +64,7 @@ export default function PortfolioPage() {
                   onClick={() => setSelectedCategory(category)}
                   className={`pb-3 text-sm whitespace-nowrap transition-colors ${
                     selectedCategory === category
-                      ? "text-foreground border-b border-foreground -mb-px"
+                      ? "text-[#E8702A] border-b border-[#CC5500] -mb-px"
                       : "text-muted-foreground hover:text-foreground"
                   }`}
                 >

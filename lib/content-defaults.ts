@@ -15,6 +15,8 @@ export type SiteItem = {
   link: string
   image: string
   source: "default" | "upload"
+  result?: string
+  caseStudy?: string
 }
 
 const toTitle = (name: string) =>
@@ -137,6 +139,24 @@ export const DEFAULT_POSTERS: PosterItem[] = [
   })),
 ]
 
+function posterById(id: string) {
+  return DEFAULT_POSTERS.find((item) => item.id === id)
+}
+
+function posterByFile(name: string) {
+  return DEFAULT_POSTERS.find((item) => item.src.includes(`/${name}.webp`))
+}
+
+export const FEATURED_POSTERS: PosterItem[] = [
+  posterById("poster-1"),
+  posterById("poster-2"),
+  posterById("poster-4"),
+  posterByFile("ChurchService"),
+  posterByFile("easterposter"),
+  posterByFile("ultrasound_marketing"),
+  posterById("poster-3"),
+].filter((item): item is PosterItem => Boolean(item))
+
 export const FEATURED_SITES: SiteItem[] = [
   {
     id: "site-accord",
@@ -146,6 +166,8 @@ export const FEATURED_SITES: SiteItem[] = [
     tags: ["Medical"],
     link: "https://www.accordmedical.co.ke/",
     source: "default",
+    result: "Catalog and storefront for clinics nationwide",
+    caseStudy: "/case-studies/accord-medical",
   },
   {
     id: "site-rai",
@@ -155,6 +177,8 @@ export const FEATURED_SITES: SiteItem[] = [
     tags: ["Retail"],
     link: "https://www.raimerchants.co.ke/",
     source: "default",
+    result: "A Nairobi shop that loads fast on a phone",
+    caseStudy: "/case-studies/rai-merchants",
   },
   {
     id: "site-4",
@@ -164,6 +188,8 @@ export const FEATURED_SITES: SiteItem[] = [
     tags: ["Community"],
     link: "https://www.amanicentercbo.org/",
     source: "default",
+    result: "Outreach that people can find and support",
+    caseStudy: "/case-studies/amani-centre-cbo",
   },
   {
     id: "site-3",
@@ -173,6 +199,8 @@ export const FEATURED_SITES: SiteItem[] = [
     tags: ["E-commerce"],
     link: "https://www.havenlivingfurniture.co.ke/",
     source: "default",
+    result: "Products they can update without a developer",
+    caseStudy: "/case-studies/haven-furnitures",
   },
   {
     id: "site-1",
@@ -183,6 +211,8 @@ export const FEATURED_SITES: SiteItem[] = [
     tags: ["Events"],
     link: "https://www.boomevents.co.ke/",
     source: "default",
+    result: "60% more inquiries after launch",
+    caseStudy: "/case-studies/boom-audio-visuals",
   },
 ]
 

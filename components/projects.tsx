@@ -1,12 +1,10 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { motion, useReducedMotion } from "framer-motion"
-import { revealChild, staggerParent } from "@/components/animations"
+import Image from "next/image"
 import Link from "next/link"
 import { SectionHeading } from "@/components/section-heading"
-import { LiveSiteFrame } from "@/components/live-site-frame"
-import { DEFAULT_SITES, FEATURED_SITES, type SiteItem } from "@/lib/content-defaults"
+import { FEATURED_SITES, type SiteItem } from "@/lib/content-defaults"
 
 const privateProjects = [
   {
@@ -26,136 +24,98 @@ const privateProjects = [
   },
 ]
 
-function hostOf(link: string) {
-  try {
-    return new URL(link).hostname.replace(/^www\./, "")
-  } catch {
-    return link
-  }
-}
-
 export function Projects() {
-  const reduce = useReducedMotion()
-  const [more, setMore] = useState<SiteItem[]>(DEFAULT_SITES.filter((site) => !FEATURED_SITES.some((item) => item.id === site.id)))
-  const [showAll, setShowAll] = useState(false)
+  const [active, setActive] = useState<SiteItem | null>(null)
+  const [cursor, setCursor] = useState({ x: 0, y: 0 })
+  const [follow, setFollow] = useState(false)
 
   useEffect(() => {
-    const featuredHosts = new Set(FEATURED_SITES.map((site) => hostOf(site.link)))
-    fetch("/api/content/sites")
-      .then((res) => res.json())
-      .then((data) => {
-        if (!Array.isArray(data.sites)) return
-        const extras = (data.sites as SiteItem[]).filter((site) => !featuredHosts.has(hostOf(site.link)))
-        if (extras.length > 0) setMore(extras)
-      })
-      .catch(() => {})
+    const media = window.matchMedia("(hover: hover) and (pointer: fine)")
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)")
+    const update = () => setFollow(media.matches && !reduce.matches)
+    update()
+    media.addEventListener("change", update)
+    reduce.addEventListener("change", update)
+    return () => {
+      media.removeEventListener("change", update)
+      reduce.removeEventListener("change", update)
+    }
   }, [])
 
   return (
     <section id="projects" className="scroll-mt-24 px-5 sm:px-8 py-16 sm:py-24">
       <div className="mx-auto max-w-6xl">
-        <div className="mb-12 flex flex-col gap-6 sm:mb-16 sm:flex-row sm:items-end sm:justify-between">
-          <SectionHeading
-            index="01"
-            eyebrow="Work"
-            title="Selected sites"
-            description="Live websites. They scroll on their own while you read."
-          />
-          <p className="shrink-0 text-sm text-muted-foreground">
-            <Link href="/case-studies/boom-audio-visuals" className="underline-offset-4 hover:text-foreground hover:underline">
-              Boom
-            </Link>
-            <span className="mx-2">/</span>
-            <Link href="/case-studies/amani-centre-cbo" className="underline-offset-4 hover:text-foreground hover:underline">
-              Amani
-            </Link>
-          </p>
-        </div>
+        <SectionHeading
+          index="01"
+          eyebrow="Work"
+          title="Selected sites"
+          description="Live builds for medical, events, furniture, retail, and community. Hover a row to preview."
+        />
 
-        <div className="grid gap-16 sm:gap-24">
-          {FEATURED_SITES.map((project, index) => (
-            <motion.article
-              key={project.id}
-              className="grid items-start gap-6 lg:grid-cols-12 lg:gap-12"
-              initial={reduce ? false : "hidden"}
-              whileInView={reduce ? undefined : "show"}
-              viewport={{ once: true, margin: "0px 0px -10% 0px" }}
-              variants={staggerParent(0.12)}
-            >
-              <motion.div
-                className="min-w-0 lg:col-span-8"
-                variants={{
-                  hidden: { opacity: 0, y: 36, scale: 0.96 },
-                  show: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.75, ease: [0.22, 1, 0.36, 1] } },
-                }}
-                style={{ transformOrigin: "50% 0%" }}
+        <div
+          className="relative mt-12"
+          onMouseMove={(event) => setCursor({ x: event.clientX, y: event.clientY })}
+          onMouseLeave={() => setActive(null)}
+        >
+          <ul className="divide-y divide-border border-y border-border">
+            {FEATURED_SITES.map((project, index) => (
+              <li
+                key={project.id}
+                className="group grid min-w-0 grid-cols-[auto_1fr] items-baseline gap-x-4 gap-y-1 py-6 sm:grid-cols-[3.5rem_minmax(0,1fr)_minmax(0,16rem)_auto] sm:gap-6"
+                onMouseEnter={() => setActive(project)}
+                onFocus={() => setActive(project)}
               >
-                <LiveSiteFrame url={project.link} title={project.title} />
-              </motion.div>
-              <motion.div
-                className="min-w-0 lg:col-span-4 lg:pt-8"
-                variants={{ hidden: {}, show: { transition: { staggerChildren: 0.08 } } }}
-              >
-                <motion.p variants={revealChild} className="font-label text-[11px] tracking-[0.16em] text-muted-foreground">
+                <span className="font-label text-[11px] tracking-[0.16em] text-muted-foreground">
                   {String(index + 1).padStart(2, "0")}
-                  {project.tags[0] ? `  ·  ${project.tags[0]}` : ""}
-                </motion.p>
-                <motion.h3 variants={revealChild} className="mt-3 w-fit bg-white px-2 py-1 font-heading text-2xl font-medium tracking-tight text-neutral-950 sm:text-3xl">
-                  <a
-                    href={project.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-neutral-950 transition-opacity hover:opacity-70"
-                    style={{ color: "#141414" }}
-                  >
+                </span>
+                <h3 className="font-heading text-2xl tracking-tight text-foreground transition-colors group-hover:text-[#E8702A] sm:text-4xl">
+                  <a href={project.link} target="_blank" rel="noopener noreferrer">
                     {project.title}
                   </a>
-                </motion.h3>
-                <motion.p variants={revealChild} className="mt-3 text-sm leading-relaxed text-muted-foreground sm:text-base">{project.description}</motion.p>
-                <motion.a
-                  variants={revealChild}
-                  href={project.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-5 inline-flex text-sm text-foreground underline-offset-4 hover:underline"
-                >
-                  Visit site
-                </motion.a>
-              </motion.div>
-            </motion.article>
-          ))}
-        </div>
-
-        {more.length > 0 && (
-          <div className="mt-16">
-            <button
-              type="button"
-              onClick={() => setShowAll((value) => !value)}
-              className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-            >
-              {showAll ? "Hide other work" : `Other work · ${more.length}`}
-            </button>
-            {showAll && (
-              <div className="mt-6 divide-y divide-border border-y border-border">
-                {more.map((project) => (
+                </h3>
+                <p className="col-start-2 text-sm text-muted-foreground sm:col-auto">
+                  {project.result ?? project.description}
+                </p>
+                {project.caseStudy ? (
+                  <Link
+                    href={project.caseStudy}
+                    className="col-start-2 text-sm text-muted-foreground underline-offset-4 hover:text-[#E8702A] hover:underline sm:col-auto sm:justify-self-end"
+                  >
+                    Case study
+                  </Link>
+                ) : (
                   <a
-                    key={project.id}
                     href={project.link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-baseline justify-between gap-6 py-4 text-sm hover:text-foreground"
+                    className="col-start-2 text-sm text-muted-foreground hover:text-[#E8702A] sm:col-auto sm:justify-self-end"
                   >
-                    <span className="text-foreground">{project.title}</span>
-                    <span className="truncate text-muted-foreground">{project.description}</span>
+                    Visit
                   </a>
-                ))}
-              </div>
-            )}
-          </div>
-        )}
+                )}
+              </li>
+            ))}
+          </ul>
 
-        <div className="mt-20 border-t border-border pt-10">
-          <p className="font-label text-[11px] tracking-[0.18em] uppercase text-muted-foreground">Private systems</p>
+          {follow && active && (
+            <div
+              className="pointer-events-none fixed z-40 hidden w-[280px] overflow-hidden rounded-md border border-border bg-surface shadow-2xl md:block"
+              style={{
+                left: Math.min(cursor.x + 24, window.innerWidth - 304),
+                top: Math.min(cursor.y - 90, window.innerHeight - 220),
+              }}
+            >
+              <div className="relative aspect-[16/10] bg-[#1a1917]">
+                <Image src={active.image} alt="" fill className="object-cover" sizes="280px" />
+              </div>
+            </div>
+          )}
+        </div>
+
+        <div className="mt-16 border-t border-border pt-10">
+          <p className="font-label text-[11px] tracking-[0.18em] uppercase text-muted-foreground">
+            Private systems · {privateProjects.length}
+          </p>
           <div className="mt-6 divide-y divide-border">
             {privateProjects.map((project) => (
               <div key={project.title} className="grid gap-1 py-5 sm:grid-cols-[1fr_1.4fr] sm:items-baseline sm:gap-8">

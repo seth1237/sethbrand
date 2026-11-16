@@ -38,7 +38,8 @@ export function SectionHeading({
       )}
       <motion.h2
         variants={{ hidden: {}, show: {} }}
-        className="font-heading text-3xl sm:text-4xl lg:text-[2.75rem] font-medium text-foreground tracking-tight leading-[1.08]"
+        aria-label={title}
+        className="font-heading text-[1.65rem] sm:text-4xl lg:text-[2.75rem] font-medium text-foreground tracking-tight leading-[1.12] sm:leading-[1.08]"
       >
         <RevealWords text={title} mode="parent" />
       </motion.h2>

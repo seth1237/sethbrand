@@ -28,7 +28,7 @@ const pricingPlans = [
     popular: false,
   },
   {
-    name: "Professional",
+    name: "Growth",
     description: "Full marketing stack for businesses that want consistent leads.",
     price: { monthly: 58000, yearly: 52200 },
     features: [
@@ -47,7 +47,7 @@ const pricingPlans = [
     popular: true,
   },
   {
-    name: "Enterprise",
+    name: "Full Service",
     description: "Custom work for teams with heavier marketing needs.",
     price: { monthly: 118000, yearly: 106200 },
     features: [

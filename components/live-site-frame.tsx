@@ -12,22 +12,35 @@ function easeInOut(t: number) {
 type LiveSiteFrameProps = {
   url: string
   title: string
+  image?: string
 }
 
-export function LiveSiteFrame({ url, title }: LiveSiteFrameProps) {
+export function LiveSiteFrame({ url, title, image }: LiveSiteFrameProps) {
   const shellRef = useRef<HTMLDivElement>(null)
   const iframeRef = useRef<HTMLIFrameElement>(null)
-  const [scale, setScale] = useState(0.42)
+  const [scale, setScale] = useState(0.28)
   const [active, setActive] = useState(false)
   const [mounted, setMounted] = useState(false)
   const [ready, setReady] = useState(false)
+  const [live, setLive] = useState(false)
   const metrics = useRef({ height: VIEW_H * 2.4, view: VIEW_H })
+
+  useEffect(() => {
+    const media = window.matchMedia("(min-width: 768px)")
+    const update = () => setLive(media.matches)
+    update()
+    media.addEventListener("change", update)
+    return () => media.removeEventListener("change", update)
+  }, [])
 
   useEffect(() => {
     const shell = shellRef.current
     if (!shell) return
 
-    const measure = () => setScale(shell.clientWidth / VIEW_W)
+    const measure = () => {
+      const width = shell.clientWidth
+      if (width > 0) setScale(width / VIEW_W)
+    }
     measure()
     const observer = new ResizeObserver(measure)
     observer.observe(shell)
@@ -126,8 +139,21 @@ export function LiveSiteFrame({ url, title }: LiveSiteFrameProps) {
           {hostname}
         </span>
       </div>
-      <div ref={shellRef} className="relative w-full overflow-hidden bg-white" style={{ height: Math.max(220, Math.round(VIEW_H * scale)) }}>
-        {mounted ? (
+      <div
+        ref={shellRef}
+        className="relative w-full overflow-hidden bg-muted"
+        style={{ height: live ? Math.max(200, Math.round(VIEW_H * scale)) : undefined }}
+      >
+        {!live ? (
+          <div className="relative aspect-[16/10] w-full">
+            {image ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={image} alt="" className="absolute inset-0 h-full w-full object-cover object-top" />
+            ) : (
+              <div className="absolute inset-0 bg-foreground/5" />
+            )}
+          </div>
+        ) : mounted ? (
           <iframe
             ref={iframeRef}
             title={title}
@@ -135,7 +161,7 @@ export function LiveSiteFrame({ url, title }: LiveSiteFrameProps) {
             sandbox="allow-scripts allow-popups"
             referrerPolicy="no-referrer"
             scrolling="no"
-            className="pointer-events-none absolute left-0 top-0 border-0"
+            className="pointer-events-none absolute left-0 top-0 max-w-none border-0"
             style={{ width: VIEW_W, height: VIEW_H, transform: `scale(${scale})`, transformOrigin: "top left" }}
           />
         ) : (

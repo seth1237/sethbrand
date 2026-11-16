@@ -157,6 +157,9 @@ export function ContactForm() {
           )}
         />
 
+        <p className="text-sm text-muted-foreground">
+          I read every message myself. Expect a reply within one business day with next steps.
+        </p>
         <Button type="submit" size="lg" className="w-full" disabled={isSubmitting}>
           {isSubmitting ? (
             <>

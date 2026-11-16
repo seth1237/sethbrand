@@ -1,121 +1,66 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import Image from "next/image"
 import { motion, useReducedMotion } from "framer-motion"
-import { RevealWords, revealChild, staggerParent } from "@/components/animations"
-import { siteConfig } from "@/lib/site-config"
-
-const words = ["customers", "leads"]
-const links = [
-  { label: "GitHub", href: siteConfig.social.github.url },
-  { label: "LinkedIn", href: siteConfig.social.linkedin.url },
-  { label: "Email", href: `mailto:${siteConfig.contact.email}` },
-].filter((item) => !!item.href)
+import { revealChild, staggerParent } from "@/components/animations"
+import { MagneticButton } from "@/components/magnetic-button"
 
 export function Hero() {
-  const [wordIndex, setWordIndex] = useState(0)
-  const [count, setCount] = useState(0)
-  const [phase, setPhase] = useState<"hold" | "delete" | "type">("type")
-  const [buzz, setBuzz] = useState(false)
-  const reduce = useReducedMotion()
-
-  useEffect(() => {
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches
-    if (reduce) {
-      setWordIndex(0)
-      setCount(words[0].length)
-      setPhase("hold")
-      return
-    }
-
-    const word = words[wordIndex]
-    let timer = 0
-
-    if (phase === "hold") {
-      timer = window.setTimeout(() => setPhase("delete"), 1600)
-    } else if (phase === "delete") {
-      if (count === 0) {
-        timer = window.setTimeout(() => {
-          setWordIndex((index) => (index + 1) % words.length)
-          setPhase("type")
-        }, 280)
-      } else {
-        timer = window.setTimeout(() => setCount((value) => value - 1), 42)
-      }
-    } else if (count >= word.length) {
-      timer = window.setTimeout(() => setPhase("hold"), 180)
-    } else {
-      timer = window.setTimeout(() => {
-        setCount((value) => value + 1)
-        setBuzz(true)
-        window.setTimeout(() => setBuzz(false), 90)
-      }, 68)
-    }
-
-    return () => window.clearTimeout(timer)
-  }, [phase, count, wordIndex])
-
-  const shown = words[wordIndex].slice(0, count)
+  const reduceMotion = useReducedMotion()
+  const [ready, setReady] = useState(false)
+  useEffect(() => setReady(true), [])
+  const reduce = !ready || reduceMotion
 
   return (
-    <section className="px-5 sm:px-8 pt-[calc(6.5rem+env(safe-area-inset-top))] pb-16 sm:pt-36 sm:pb-24">
-      <div className="mx-auto max-w-6xl">
-        <h1 className="max-w-4xl font-heading text-[2.6rem] sm:text-6xl lg:text-7xl font-medium leading-[1.02] tracking-tight text-foreground">
-          <span className="sr-only">Websites that get found, and businesses that get customers.</span>
-          <span aria-hidden>
-            <RevealWords text="Websites that get found, and businesses that get" mode="mount" />{" "}
-            <span className="inline-block overflow-hidden align-bottom pb-[0.08em]">
-              <motion.span
-                className={`inline-block ${buzz ? "hero-type-buzz" : ""}`}
-                initial={reduce ? false : { y: "110%" }}
-                animate={{ y: "0%" }}
-                transition={{ duration: 0.72, delay: reduce ? 0 : 0.42, ease: [0.22, 1, 0.36, 1] }}
-              >
-                {shown}
-                <span className="hero-caret" />
-              </motion.span>
-            </span>
-          </span>
-        </h1>
+    <section className="relative overflow-hidden px-5 sm:px-8 pt-[calc(6.5rem+env(safe-area-inset-top))] pb-12 sm:pt-32 sm:pb-16">
+      <div className="mx-auto grid max-w-6xl items-end gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:gap-8">
+        <motion.div initial={reduce ? false : "hidden"} animate={reduce ? undefined : "show"} variants={staggerParent(0.1, 0.08)}>
+          <h1
+            className="max-w-[12ch] font-heading text-[clamp(2.4rem,9vw,6.4rem)] leading-[0.94] tracking-[-0.04em] text-foreground"
+            aria-label="Websites that get found, and businesses that get customers"
+          >
+            Websites that{" "}
+            <em className="italic text-[#E8702A]">get found</em>, and businesses that get customers
+          </h1>
 
-        <motion.div
-          initial={reduce ? false : "hidden"}
-          animate={reduce ? undefined : "show"}
-          variants={staggerParent(0.1, 0.55)}
-        >
-          <motion.p variants={revealChild} className="mt-6 max-w-xl text-base sm:text-lg leading-relaxed text-muted-foreground">
-            I design, build, and optimize a site, then run the SEO and marketing
-            that bring people to it. One person, the whole pipeline.
+          <motion.p variants={revealChild} className="mt-6 max-w-xl text-[15px] leading-relaxed text-muted-foreground sm:text-lg">
+            Design, build, SEO, and marketing under one roof in Nairobi. You talk to one person — from the first poster
+            to the ranking plan that brings people in.
           </motion.p>
 
-          <motion.div variants={revealChild} className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-4">
-            <a
-              href="#contact"
-              className="group inline-flex items-center gap-2 text-sm font-medium text-foreground"
+          <motion.div variants={revealChild} className="mt-9 flex flex-wrap items-center gap-3">
+            <MagneticButton
+              href="/#contact"
+              className="h-12 items-center rounded-full bg-[#CC5500] px-6 text-sm font-medium text-[#F4EFE8] hover:bg-[#E8702A]"
             >
               Start a project
-              <span className="transition-transform duration-200 group-hover:translate-x-1" aria-hidden>
-                →
-              </span>
-            </a>
-            <a href="#projects" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-              Selected work
+            </MagneticButton>
+            <a
+              href="/#projects"
+              className="inline-flex h-12 items-center rounded-full border border-foreground/20 px-6 text-sm text-foreground transition-colors hover:border-[#E8702A] hover:text-[#E8702A]"
+            >
+              See the work
             </a>
           </motion.div>
+        </motion.div>
 
-          <motion.div variants={revealChild} className="mt-14 flex flex-wrap gap-x-6 gap-y-2 border-t border-border pt-5">
-            {links.map((item) => (
-              <a
-                key={item.label}
-                href={item.href}
-                target={item.href.startsWith("mailto:") ? undefined : "_blank"}
-                rel={item.href.startsWith("mailto:") ? undefined : "noopener noreferrer"}
-                className="font-label text-[11px] tracking-[0.14em] uppercase text-muted-foreground hover:text-foreground transition-colors"
-              >
-                {item.label}
-              </a>
-            ))}
-          </motion.div>
+        <motion.div
+          className="relative mx-auto w-full max-w-md lg:max-w-none"
+          initial={reduce ? false : { opacity: 0, y: 28 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: reduce ? 0 : 0.15, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <div className="orange-arch absolute inset-x-[8%] bottom-0 top-[12%] -z-0" aria-hidden />
+          <Image
+            src="/profile.webp"
+            alt="Seth Makori, web developer and SEO specialist in Nairobi"
+            width={1400}
+            height={2100}
+            priority
+            sizes="(max-width: 1024px) 80vw, 420px"
+            className="relative z-10 mx-auto h-auto w-[86%] object-contain object-bottom"
+          />
         </motion.div>
       </div>
     </section>
